@@ -14,5 +14,5 @@ datasource db {
 model FileImport {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    file      String
+    file      String @db.Text
 }
