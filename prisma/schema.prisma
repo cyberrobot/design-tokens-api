@@ -11,8 +11,8 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Example {
+model FileImport {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    file      String
 }
