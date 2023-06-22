@@ -28,7 +28,7 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Upload file
           </h1>
-          <input type="file" className="text-white" onChange={fileUploadHandler} />
+          <input type="file" className="file-input file-input-bordered w-full max-w-xs" onChange={fileUploadHandler} />
         </div>
       </main>
     </>
