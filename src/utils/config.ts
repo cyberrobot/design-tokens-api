@@ -1,16 +1,26 @@
-export const config = {
-  source: ["tokens/**/*.json"],
+import { type DesignTokens, type Config } from "style-dictionary";
+
+export const getConfig = ({
+  token,
+  filename,
+  path,
+}: {
+  token: DesignTokens;
+  filename: string;
+  path: string;
+}): Config => ({
+  tokens: token,
   platforms: {
     scss: {
       transformGroup: "scss",
-      buildPath: "build/",
+      buildPath: path,
       files: [
         {
-          destination: "variables.scss",
+          destination: filename,
           format: "scss/variables",
         },
       ],
     },
     // ...
   },
-};
+});

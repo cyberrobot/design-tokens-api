@@ -62,7 +62,7 @@ export default function Home() {
           </div>
           <button className="btn btn-primary" onClick={tokenRequestHandler}>Request</button>
           <div className='text-white'>
-            {query.data && query.data}
+            {query.data && JSON.stringify(query.data)}
           </div>
         </div>
       </main>

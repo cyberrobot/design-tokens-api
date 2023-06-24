@@ -2,6 +2,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import _get from "lodash/get";
+import { type DesignToken } from "style-dictionary/types/DesignToken";
+import { buildFile } from "~/utils/build-file";
+import { removeFile } from "~/utils/remove-file";
+import { getResponse } from "~/utils/get-response";
 
 export const getToken = createTRPCRouter({
   get: publicProcedure
@@ -20,15 +24,22 @@ export const getToken = createTRPCRouter({
           },
         });
         if (row) {
-          const objectByNamespace = JSON.stringify(
-            _get(JSON.parse(row.file), input.namespace) as Record<
-              string,
-              unknown
-            >
-          );
-
+          const objectByNamespace = _get(
+            JSON.parse(row.file),
+            input.namespace
+          ) as DesignToken;
           if (objectByNamespace) {
-            return objectByNamespace;
+            const outputDirectory = buildFile({
+              token: objectByNamespace,
+              id: input.id,
+            });
+            const response = getResponse({
+              path: outputDirectory,
+              namespace: input.namespace,
+              id: input.id,
+            });
+            removeFile(outputDirectory);
+            return response;
           }
 
           return JSON.stringify({
