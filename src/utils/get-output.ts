@@ -9,11 +9,11 @@ export const getSuccessOutput = ({
   namespace: string;
   id: string;
 }) => {
-  const output = fs.readFileSync(path).toJSON();
+  const output = fs.readFileSync(path).toString();
   return {
     namespace,
     id,
-    output: JSON.stringify(output),
+    output,
   };
 };
 
