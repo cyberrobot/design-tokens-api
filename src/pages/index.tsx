@@ -3,15 +3,19 @@ import { useRef, useState } from 'react';
 import { api } from '~/utils/api';
 
 export default function Home() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    id: string;
+    namespace: string[];
+  }>({
     id: '',
-    namespace: '',
+    namespace: [],
   })
 
   const mutation = api.import.file.useMutation();
   const query = api.token.get.useQuery(formData);
   const idInputRef = useRef<HTMLInputElement>(null);
-  const namespaceInputRef = useRef<HTMLInputElement>(null);
+  const namespace1InputRef = useRef<HTMLInputElement>(null);
+  const namespace2InputRef = useRef<HTMLInputElement>(null);
 
   const fileUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.item(0);
@@ -28,9 +32,10 @@ export default function Home() {
 
   const tokenRequestHandler = () => {
     const id = idInputRef.current?.value;
-    const namespace = namespaceInputRef.current?.value;
-    if (id && namespace) {
-      setFormData({ id, namespace });
+    const namespace1 = namespace1InputRef.current?.value;
+    const namespace2 = namespace2InputRef.current?.value;
+    if (id && namespace1 && namespace2) {
+      setFormData({ id, namespace: [namespace1, namespace2] });
     }
   }
 
@@ -58,11 +63,19 @@ export default function Home() {
           </div>
           <div className="join gap-3">
             <label className="label text-white">Namespace:</label>
-            <input ref={namespaceInputRef} type="text" className="input input-bordered" />
+            <input ref={namespace1InputRef} type="text" className="input input-bordered" />
+          </div>
+          <div className="join gap-3">
+            <label className="label text-white">Namespace:</label>
+            <input ref={namespace2InputRef} type="text" className="input input-bordered" />
           </div>
           <button className="btn btn-primary" onClick={tokenRequestHandler}>Request</button>
           <div className='text-white'>
-            {query.data && JSON.stringify(query.data)}
+            <pre className="w-[1000px] overflow-auto">
+              <code className="w-full">
+                {query.data && JSON.stringify(query.data, null, 2)}
+              </code>
+            </pre>
           </div>
         </div>
       </main>
