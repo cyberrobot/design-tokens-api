@@ -1,11 +1,10 @@
 import fs from "fs";
 
-export const removeFile = (path: string) => {
-  fs.rm(path, (error) => {
-    if (error) {
-      console.error(error);
-      return;
-    }
+export const removeFiles = (path: string) => {
+  try {
+    fs.rmdirSync(path, { recursive: true });
     console.log("File removed successfully!");
-  });
+  } catch (error) {
+    console.error(error);
+  }
 };

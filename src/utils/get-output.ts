@@ -1,32 +1,53 @@
 import fs from "fs";
+import { type Output, type Transform } from "~/server/api/routers/get-token";
 
-export const getSuccessOutput = ({
-  path,
-  namespace,
+export const getOutput = ({
   id,
+  buildPath,
+  transforms,
+  namespace,
 }: {
-  path: string;
-  namespace: string;
   id: string;
+  buildPath: string;
+  transforms: Transform[];
+  namespace: string;
 }) => {
-  const output = fs.readFileSync(path).toString();
-  return {
+  const output: Output = {
     namespace,
-    id,
-    output,
+    transforms: {},
   };
+  for (const transform of transforms) {
+    fs.readdirSync(buildPath).forEach((file) => {
+      if (file.includes(`${transform}-${id}`)) {
+        const transformOutput = fs
+          .readFileSync(`${buildPath}${file}`)
+          .toString();
+        if (transformOutput) {
+          if (output.transforms) {
+            output.transforms[transform] = transformOutput;
+          }
+        } else {
+          if (output.transforms) {
+            output.transforms[
+              transform
+            ] = `No output for transform ${transform} was found.`;
+          }
+        }
+      }
+    });
+  }
+
+  return output;
 };
 
 export const getErrorOutput = ({
   namespace,
-  id,
 }: {
   namespace: string;
   id: string;
-}) => {
+}): Output => {
   return {
     namespace,
-    id,
-    output: `No token for namespace was found.`,
+    error: `No token for namespace was found.`,
   };
 };

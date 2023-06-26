@@ -1,14 +1,17 @@
 import Head from "next/head";
 import { useRef, useState } from 'react';
+import { type Transform } from '~/server/api/routers/get-token';
 import { api } from '~/utils/api';
 
 export default function Home() {
   const [formData, setFormData] = useState<{
     id: string;
-    namespace: string[];
+    namespaces: string[];
+    transforms: Transform[];
   }>({
     id: '',
-    namespace: [],
+    namespaces: [],
+    transforms: [],
   })
 
   const mutation = api.import.file.useMutation();
@@ -35,7 +38,7 @@ export default function Home() {
     const namespace1 = namespace1InputRef.current?.value;
     const namespace2 = namespace2InputRef.current?.value;
     if (id && namespace1 && namespace2) {
-      setFormData({ id, namespace: [namespace1, namespace2] });
+      setFormData({ id, namespaces: [namespace1, namespace2], transforms: ['scss', 'web'] });
     }
   }
 
