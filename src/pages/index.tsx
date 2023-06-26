@@ -38,7 +38,7 @@ export default function Home() {
     const namespace1 = namespace1InputRef.current?.value;
     const namespace2 = namespace2InputRef.current?.value;
     if (id && namespace1 && namespace2) {
-      setFormData({ id, namespaces: [namespace1, namespace2], transforms: ['scss', 'web'] });
+      setFormData({ id, namespaces: [namespace1, namespace2], transforms: ['scss', 'css'] });
     }
   }
 

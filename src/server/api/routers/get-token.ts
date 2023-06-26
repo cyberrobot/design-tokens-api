@@ -18,9 +18,9 @@ export type Output = {
   error?: string;
 };
 
-export type Transform = "scss" | "web";
+export type Transform = "scss" | "css";
 
-const transforms = ["scss", "web"] as const;
+const transforms = ["scss", "css"] as const;
 
 export const getToken = createTRPCRouter({
   get: publicProcedure
@@ -54,7 +54,6 @@ export const getToken = createTRPCRouter({
                 buildPath,
               });
               const output = getOutput({
-                id: input.id,
                 transforms: input.transforms,
                 buildPath: buildPath,
                 namespace,

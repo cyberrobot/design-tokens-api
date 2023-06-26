@@ -2,12 +2,10 @@ import fs from "fs";
 import { type Output, type Transform } from "~/server/api/routers/get-token";
 
 export const getOutput = ({
-  id,
   buildPath,
   transforms,
   namespace,
 }: {
-  id: string;
   buildPath: string;
   transforms: Transform[];
   namespace: string;
@@ -18,7 +16,8 @@ export const getOutput = ({
   };
   for (const transform of transforms) {
     fs.readdirSync(buildPath).forEach((file) => {
-      if (file.includes(`${transform}-${id}`)) {
+      const filename = file.split(".")[0];
+      if (filename === transform) {
         const transformOutput = fs
           .readFileSync(`${buildPath}${file}`)
           .toString();
