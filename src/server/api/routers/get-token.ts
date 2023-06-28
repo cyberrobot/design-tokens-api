@@ -19,8 +19,7 @@ export const getToken = createTRPCRouter({
     )
     .query(async ({ input }) => {
       if (input.id && input.tokens) {
-        console.log("Input", input);
-        const buildPath = `sd-build/${input.id}/`;
+        const buildPath = `/tmp/sd-build/${input.id}/`;
         const row = await getDbRowById(input.id);
         if (row) {
           const response: Response = {
