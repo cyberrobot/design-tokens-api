@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRef, useState } from 'react';
-import { type Tokens } from '~/server/api/routers/get-token';
+import { type Tokens } from '~/types/server';
 import { api } from '~/utils/api';
 
 export default function Home() {

@@ -3,7 +3,7 @@ import {
   type Config,
   type Platform as SDPlatform,
 } from "style-dictionary";
-import { type Platform, type Platforms } from "~/server/api/routers/get-token";
+import { type Platform, type Platforms } from "~/types/server";
 
 const getPlatform = ({
   config,

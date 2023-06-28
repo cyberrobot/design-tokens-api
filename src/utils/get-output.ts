@@ -1,10 +1,10 @@
 import fs from "fs";
 import {
-  type TokenPlatformFormat,
   type Token,
   type TokenOutput,
   type PlatformOutput,
-} from "~/server/api/routers/get-token";
+  type TokenPlatformFormat,
+} from "~/types/server";
 
 export const getTokenOutput = ({
   buildPath,

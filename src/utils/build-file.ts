@@ -1,7 +1,7 @@
 import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { getConfig } from "./config";
 import StyleDictionary from "style-dictionary";
-import { type Platforms } from "~/server/api/routers/get-token";
+import { type Platforms } from "~/types/server";
 
 export const buildTokens = ({
   token,
