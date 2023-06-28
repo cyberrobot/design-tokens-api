@@ -5,6 +5,7 @@ import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { buildTokens } from "~/utils/build-file";
 import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
+import { removeFiles } from "~/utils/remove-file";
 import { TokensSchema } from "~/schemas/server";
 import { type Response } from "~/types/server";
 
@@ -19,7 +20,7 @@ export const getToken = createTRPCRouter({
     .query(async ({ input }) => {
       if (input.id && input.tokens) {
         console.log("Input", input);
-        const buildPath = `build/${input.id}/`;
+        const buildPath = `sd-build/${input.id}/`;
         const row = await getDbRowById(input.id);
         if (row) {
           const response: Response = {
@@ -43,7 +44,7 @@ export const getToken = createTRPCRouter({
                 buildPath: buildPath,
               });
               response.tokens.push(output);
-              // removeFiles(buildPath);
+              removeFiles(buildPath);
             } else {
               const errorOutput = getErrorOutput({
                 namespace: token.namespace,
