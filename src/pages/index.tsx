@@ -1,21 +1,19 @@
 import Head from "next/head";
 import { useRef, useState } from 'react';
-import { type Transform } from '~/server/api/routers/get-token';
+import { type Tokens } from '~/server/api/routers/get-token';
 import { api } from '~/utils/api';
 
 export default function Home() {
-  const [formData, setFormData] = useState<{
+  const [input, setInput] = useState<{
     id: string;
-    namespaces: string[];
-    transforms: Transform[];
+    tokens: Tokens
   }>({
     id: '',
-    namespaces: [],
-    transforms: [],
+    tokens: []
   })
 
   const mutation = api.import.file.useMutation();
-  const query = api.token.get.useQuery(formData);
+  const query = api.token.get.useQuery(input);
   const idInputRef = useRef<HTMLInputElement>(null);
   const namespace1InputRef = useRef<HTMLInputElement>(null);
   const namespace2InputRef = useRef<HTMLInputElement>(null);
@@ -34,12 +32,28 @@ export default function Home() {
   };
 
   const tokenRequestHandler = () => {
-    const id = idInputRef.current?.value;
-    const namespace1 = namespace1InputRef.current?.value;
-    const namespace2 = namespace2InputRef.current?.value;
-    if (id && namespace1 && namespace2) {
-      setFormData({ id, namespaces: [namespace1, namespace2], transforms: ['scss', 'css'] });
-    }
+    setInput({
+      id: 'cljafmcvi000g4kbfho5cvef9',
+      tokens: [{
+        namespace: 'color.base.gray',
+        platforms: [{
+          name: 'scss',
+          transformGroup: 'scss',
+          formats: ['scss/variables']
+        }, {
+          name: 'css',
+          transformGroup: 'css',
+          formats: ['css/variables']
+        }]
+      }, {
+        namespace: 'size',
+        platforms: [{
+          name: 'ES6',
+          transformGroup: 'js',
+          formats: ['javascript/module', 'typescript/module-declarations']
+        }]
+      }]
+    });
   }
 
   return (
@@ -60,7 +74,7 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Request token
           </h1>
-          <div className="join gap-3">
+          {/* <div className="join gap-3">
             <label className="label text-white">ID:</label>
             <input ref={idInputRef} type="text" className="input input-bordered" />
           </div>
@@ -71,7 +85,7 @@ export default function Home() {
           <div className="join gap-3">
             <label className="label text-white">Namespace:</label>
             <input ref={namespace2InputRef} type="text" className="input input-bordered" />
-          </div>
+          </div> */}
           <button className="btn btn-primary" onClick={tokenRequestHandler}>Request</button>
           <div className='text-white'>
             <pre className="w-[1000px] overflow-auto">

@@ -1,39 +1,50 @@
 import fs from "fs";
-import { type Output, type Transform } from "~/server/api/routers/get-token";
+import {
+  type TokenPlatformFormat,
+  type Token,
+  type TokenOutput,
+  type PlatformOutput,
+} from "~/server/api/routers/get-token";
 
-export const getOutput = ({
+export const getTokenOutput = ({
   buildPath,
-  transforms,
-  namespace,
+  token,
 }: {
   buildPath: string;
-  transforms: Transform[];
-  namespace: string;
+  token: Token;
 }) => {
-  const output: Output = {
-    namespace,
-    transforms: {},
+  const output: TokenOutput = {
+    namespace: token.namespace,
+    platforms: [],
   };
-  for (const transform of transforms) {
+  for (const platform of token.platforms) {
+    const platformOutput: PlatformOutput = {
+      name: platform.name,
+      formats: [],
+    };
+
     fs.readdirSync(buildPath).forEach((file) => {
       const filename = file.split(".")[0];
-      if (filename === transform) {
-        const transformOutput = fs
-          .readFileSync(`${buildPath}${file}`)
-          .toString();
-        if (transformOutput) {
-          if (output.transforms) {
-            output.transforms[transform] = transformOutput;
-          }
-        } else {
-          if (output.transforms) {
-            output.transforms[
-              transform
-            ] = `No output for transform ${transform} was found.`;
+      if (platform.formats) {
+        for (const format of platform.formats) {
+          if (filename === `${platform.name}-${format.replace("/", "-")}`) {
+            const formatOutput: TokenPlatformFormat = {
+              name: format,
+              value: fs.readFileSync(`${buildPath}${file}`).toString(),
+            };
+            if (formatOutput && platformOutput.formats) {
+              platformOutput.formats.push(formatOutput);
+            } else {
+              if (output.error) {
+                output.error = `No output for format ${format} was found.`;
+              }
+            }
           }
         }
       }
     });
+
+    output.platforms?.push(platformOutput);
   }
 
   return output;
@@ -43,8 +54,7 @@ export const getErrorOutput = ({
   namespace,
 }: {
   namespace: string;
-  id: string;
-}): Output => {
+}): TokenOutput => {
   return {
     namespace,
     error: `No token for namespace was found.`,

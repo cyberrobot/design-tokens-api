@@ -1,39 +1,9 @@
 import {
   type DesignTokens,
   type Config,
-  type Platform,
+  type Platform as SDPlatform,
 } from "style-dictionary";
-
-type PlatformConfig = {
-  transformGroup: string;
-  files: [
-    {
-      destination: string;
-      format: string;
-    }
-  ];
-};
-
-const platforms: Record<string, PlatformConfig> = {
-  scss: {
-    transformGroup: "scss",
-    files: [
-      {
-        destination: "scss.scss",
-        format: "scss/variables",
-      },
-    ],
-  },
-  css: {
-    transformGroup: "web",
-    files: [
-      {
-        destination: "css.css",
-        format: "css/variables",
-      },
-    ],
-  },
-};
+import { type Platform, type Platforms } from "~/server/api/routers/get-token";
 
 const getPlatform = ({
   config,
@@ -41,14 +11,14 @@ const getPlatform = ({
 }: {
   config: Platform;
   buildPath: string;
-}) => {
+}): SDPlatform => {
   return {
-    transformGroup: config.transformGroup,
+    ...(config.transformGroup && { transformGroup: config.transformGroup }),
     buildPath: buildPath,
-    files: config.files?.map((file) => {
+    files: config.formats?.map((format) => {
       return {
-        destination: file.destination,
-        format: file.format,
+        destination: `${config.name}-${format.replace("/", "-")}.tokens`,
+        format: format,
         options: {
           showFileHeader: false,
         },
@@ -59,13 +29,11 @@ const getPlatform = ({
 
 export const getConfig = ({
   token,
-  id,
-  transforms,
+  platforms,
   buildPath,
 }: {
   token: DesignTokens;
-  id: string;
-  transforms: string[];
+  platforms: Platforms;
   buildPath: string;
 }): Config => {
   const result: Config = {
@@ -73,10 +41,10 @@ export const getConfig = ({
     platforms: {},
   };
 
-  for (const transform of transforms) {
-    if (platforms[transform]) {
-      result.platforms[transform] = getPlatform({
-        config: platforms[transform] as Platform,
+  for (const platform of platforms) {
+    if (platform) {
+      result.platforms[platform.name] = getPlatform({
+        config: platform,
         buildPath,
       });
     }
