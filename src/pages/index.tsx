@@ -59,6 +59,13 @@ export default function Home() {
           transformGroup: 'ios-swift',
           formats: ['ios-swift/class.swift']
         }]
+      }, {
+        namespace: 'color',
+        platforms: [{
+          name: 'iOS-without-transform-group',
+          transforms: ['attribute/cti', 'color/UIColorSwift'],
+          formats: ['ios-swift/class.swift']
+        }]
       }]
     });
   }

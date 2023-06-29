@@ -56,6 +56,7 @@ export const transforms = [
   "content/icon",
   "content/quote",
   "content/objC/literal",
+  "content/swift/literal",
   "font/objC/literal",
   "font/swift/literal",
   "time/seconds",

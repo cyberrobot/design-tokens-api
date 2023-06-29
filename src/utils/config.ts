@@ -14,6 +14,7 @@ const getPlatform = ({
 }): SDPlatform => {
   return {
     ...(config.transformGroup && { transformGroup: config.transformGroup }),
+    ...(config.transforms && { transforms: config.transforms }),
     buildPath: buildPath,
     files: config.formats?.map((format) => {
       return {

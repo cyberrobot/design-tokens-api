@@ -5,7 +5,7 @@ export const PlatformSchema = z.object({
   name: z.string(),
   transformGroup: z.enum(transformGroup).optional(),
   transforms: z.array(z.enum(transforms)).optional(),
-  formats: z.array(z.enum(formats)).optional(),
+  formats: z.array(z.enum(formats)),
 });
 
 export const TokenSchema = z.object({
