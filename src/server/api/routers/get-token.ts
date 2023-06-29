@@ -5,9 +5,9 @@ import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { buildTokens } from "~/utils/build-file";
 import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
-import { removeFiles } from "~/utils/remove-file";
 import { TokensSchema } from "~/schemas/server";
 import { type Response } from "~/types/server";
+import { removeFiles } from "~/utils/remove-file";
 
 export const getToken = createTRPCRouter({
   get: publicProcedure

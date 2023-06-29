@@ -52,6 +52,13 @@ export default function Home() {
           transformGroup: 'js',
           formats: ['javascript/module', 'typescript/module-declarations']
         }]
+      }, {
+        namespace: 'color',
+        platforms: [{
+          name: 'iOS-swift',
+          transformGroup: 'ios-swift',
+          formats: ['ios-swift/class.swift']
+        }]
       }]
     });
   }

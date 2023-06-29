@@ -17,7 +17,6 @@ export const buildTokens = ({
     platforms,
     buildPath,
   });
-  console.log("SD config", JSON.stringify(config));
   const styleDictionaryExtended = StyleDictionary.extend(config);
   styleDictionaryExtended.buildAllPlatforms();
   console.log("File generated successfully!");
