@@ -7,6 +7,7 @@ import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
 import { TokensSchema } from "~/schemas/server";
 import { type Response } from "~/types/server";
+import { sdBuildFolder } from "~/constants";
 import { removeFiles } from "~/utils/remove-file";
 
 export const getToken = createTRPCRouter({
@@ -19,7 +20,7 @@ export const getToken = createTRPCRouter({
     )
     .query(async ({ input }) => {
       if (input.id && input.tokens) {
-        const buildPath = `/tmp/sd-build/${input.id}/`;
+        const buildPath = `${sdBuildFolder}${input.id}/`;
         const row = await getDbRowById(input.id);
         if (row) {
           const response: Response = {

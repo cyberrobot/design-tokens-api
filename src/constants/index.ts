@@ -1,3 +1,5 @@
+import { env } from "~/env.mjs";
+
 export const transformGroup = [
   "web",
   "js",
@@ -116,3 +118,7 @@ export const formats = [
   "sketch/palette/v2",
   "flutter/class.dart",
 ] as const;
+
+export const sdBuildFolder = `${
+  env.NODE_ENV === "development" ? "" : "/"
+}tmp/sd-build/`;
