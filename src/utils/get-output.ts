@@ -54,10 +54,10 @@ export const getTokenOutput = ({
 export const getErrorOutput = ({
   namespace,
 }: {
-  namespace: string;
+  namespace?: string;
 }): TokenOutput => {
   return {
-    namespace,
+    ...(namespace && { namespace }),
     error: `No token for namespace was found.`,
   };
 };

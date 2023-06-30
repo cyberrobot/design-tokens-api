@@ -1,7 +1,11 @@
-import { type transformGroup } from 'style-dictionary';
-import { type z } from 'zod';
-import { type formats, type transforms } from '~/constants';
-import { type PlatformSchema, type TokensSchema, type TokenSchema } from '~/schemas/server';
+import { type transformGroup } from "style-dictionary";
+import { type z } from "zod";
+import { type formats, type transforms } from "~/constants";
+import {
+  type PlatformSchema,
+  type TokensSchema,
+  type TokenSchema,
+} from "~/schemas/server";
 
 export type Response = {
   id: string;
@@ -20,7 +24,7 @@ export type PlatformOutput = {
 };
 
 export type TokenOutput = {
-  namespace: string;
+  namespace?: string;
   platforms?: PlatformOutput[];
   error?: string;
 };

@@ -9,7 +9,7 @@ export const PlatformSchema = z.object({
 });
 
 export const TokenSchema = z.object({
-  namespace: z.string(),
+  namespace: z.string().optional(),
   platforms: z.array(PlatformSchema),
 });
 

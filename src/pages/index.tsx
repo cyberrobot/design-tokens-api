@@ -33,9 +33,8 @@ export default function Home() {
 
   const tokenRequestHandler = () => {
     setInput({
-      id: 'cljafmcvi000g4kbfho5cvef9',
+      id: 'cljihsyj900004kqy1z0ksu7c',
       tokens: [{
-        namespace: 'color.base.gray',
         platforms: [{
           name: 'scss',
           transformGroup: 'scss',
@@ -46,11 +45,10 @@ export default function Home() {
           formats: ['css/variables']
         }]
       }, {
-        namespace: 'size',
         platforms: [{
           name: 'ES6',
           transformGroup: 'js',
-          formats: ['javascript/module', 'typescript/module-declarations']
+          formats: ['javascript/es6', 'typescript/es6-declarations']
         }]
       }, {
         namespace: 'color',

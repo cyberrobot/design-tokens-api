@@ -29,10 +29,9 @@ export const getToken = createTRPCRouter({
           };
 
           for (const token of input.tokens) {
-            const rawToken = _get(
-              JSON.parse(row.file),
-              token.namespace
-            ) as DesignToken;
+            const rawToken = token.namespace
+              ? (_get(JSON.parse(row.file), token.namespace) as DesignToken)
+              : (JSON.parse(row.file) as DesignToken);
             if (rawToken) {
               buildTokens({
                 token: rawToken,
