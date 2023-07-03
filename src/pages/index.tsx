@@ -1,6 +1,6 @@
 import Head from "next/head";
-import { useState } from 'react';
-import { host } from '~/constants';
+import { useMemo, useState } from 'react';
+import { host as configHost } from '~/constants';
 import { type Tokens } from '~/types/server';
 import { api } from '~/utils/api';
 
@@ -33,6 +33,8 @@ export default function Home() {
       }]
     });
   }
+
+  const host = useMemo(() => configHost, [])
 
   return (
     <>
