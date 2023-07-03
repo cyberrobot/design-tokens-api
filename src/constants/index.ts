@@ -1,5 +1,3 @@
-import { env } from "~/env.mjs";
-
 export const transformGroup = [
   "web",
   "js",
@@ -120,5 +118,10 @@ export const formats = [
 ] as const;
 
 export const sdBuildFolder = `${
-  env.NODE_ENV === "development" ? "" : "/"
+  process.env.NODE_ENV === "development" ? "" : "/"
 }tmp/sd-build/`;
+
+export const host =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : process.env.NEXT_PUBLIC_URL;
