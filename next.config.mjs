@@ -18,6 +18,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  env: {
+    HOST_URL: process.env.VERCEL_URL || "localhost:3000",
+  },
 };
 
 export default config;

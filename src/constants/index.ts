@@ -121,7 +121,6 @@ export const sdBuildFolder = `${
   process.env.NODE_ENV === "development" ? "" : "/"
 }tmp/sd-build/`;
 
-export const host =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : `https://${process.env.VERCEL_URL as string}`;
+export const host = `${
+  process.env.NODE_ENV === "development" ? "http://" : "https://"
+}${process.env.HOST_URL as string}`;
