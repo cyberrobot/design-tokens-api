@@ -20,6 +20,8 @@ const config = {
   },
   env: {
     HOST_URL: process.env.VERCEL_URL || "localhost:3000",
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN || "",
+    GITHUB_OWNER: process.env.GITHUB_OWNER || "",
   },
 };
 
