@@ -13,7 +13,7 @@ export default function Home() {
     tokens: []
   })
 
-  const query = api.token.get.useQuery(input);
+  const query = api.tokens.getToken.useQuery(input);
 
   const tokenRequestHandler = () => {
     setInput({
