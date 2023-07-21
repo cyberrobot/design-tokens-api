@@ -11,14 +11,14 @@ function Modal({ heading, body, components, isOpen = false, onClose }: {
 }) {
   return (
     <dialog id="modal" className={`modal ${isOpen ? 'modal-open' : ''}`}>
-      <form method="dialog" className="modal-box max-w-3xl">
+      <div className="modal-box max-w-3xl min-h-[500px]">
         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onClose}>✕</button>
-        {components?.Heading ? <components.Heading /> : <h3 className="font-bold text-lg">{heading}</h3>}
+        {components?.Heading ? <components.Heading /> : <h3 className="font-bold text-xl">{heading}</h3>}
         {components?.Body ? <components.Body /> : <p className="py-4">{body}</p>}
         {components?.Footer && <div className="modal-action">
           <components.Footer />
         </div>}
-      </form>
+      </div>
     </dialog>
   )
 }

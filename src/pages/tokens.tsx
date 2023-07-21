@@ -1,5 +1,8 @@
+import { type FileImport } from '@prisma/client';
 import { useState } from 'react';
 import Modal from '~/components/Modal';
+import AddToken from '~/components/AddToken';
+import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
 
 function Tokens() {
@@ -8,32 +11,59 @@ function Tokens() {
     body: '',
     isOpen: false
   });
-  const query = api.tokens.getTokens.useQuery();
+  const [transformModal, setTransformModal] = useState<{
+    heading: string;
+    body: string;
+    isOpen: boolean;
+    tokens: FileImport[];
+  }>({
+    heading: 'Export token',
+    body: '',
+    isOpen: false,
+    tokens: []
+  })
+  const [tokensToTransform, setTokensToTransform] = useState<FileImport[]>([])
+  const clearPlatforms = usePlatformStore(state => state.clearPlatforms);
+  const query = api.tokens.getTokens.useQuery(undefined, {
+    refetchOnWindowFocus: false
+  });
+  const handleTokenSelect = (e: React.ChangeEvent<HTMLInputElement>, token: FileImport) => {
+    setTokensToTransform(e.target.checked ? [...tokensToTransform, token] : tokensToTransform.filter(tokenToTransform => token.id !== tokenToTransform.id))
+  }
+  const hasTokensToTransform = tokensToTransform.length > 0
+
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col gap-8 p-8 bg-[#15162c] rounded-md mt-8 shadow-sm">
-          <h2 className="text-5xl font-regular tracking-tight text-white sm:text-[2rem]">
-            Tokens
-          </h2>
+      <main className="flex min-h-screen flex-col items-center">
+        <div className="container flex flex-col gap-8 p-8 bg-neutral rounded-md mt-8 shadow-sm">
+          <div className="flex justify-between items-center">
+            <h2 className="text-5xl font-regular tracking-tight  sm:text-[2rem]">
+              Tokens
+            </h2>
+            {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
+              ...transformModal,
+              tokens: tokensToTransform,
+              isOpen: true
+            })}>Export</button>}
+          </div>
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th className="text-white"></th>
-                  <th className="text-white">ID</th>
-                  <th className="text-white">Created</th>
-                  <th className="text-white">Token</th>
+                  <th></th>
+                  <th>ID</th>
+                  <th>Created</th>
+                  <th>Token</th>
                 </tr>
               </thead>
               <tbody>
-                {query.data?.map((token, index) => (
+                {query.data?.map((token) => (
                   <tr key={token.id}>
-                    <td className="text-white">{index + 1}</td>
-                    <td className="text-white">{token.id}</td>
-                    <td className="text-white">{token.createdAt.toLocaleDateString()} - {token.createdAt.toLocaleTimeString()}</td>
-                    <td className="text-white">
-                      <a href="" className="text-blue-400 underline" onClick={(e) => {
+                    <td><input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleTokenSelect(e, token)} /></td>
+                    <td>{token.id}</td>
+                    <td>{token.createdAt.toLocaleDateString()} - {token.createdAt.toLocaleTimeString()}</td>
+                    <td>
+                      <a href="" className="text-primary underline" onClick={(e) => {
                         e.preventDefault();
                         setContentModal({
                           heading: `Token ${token.id}`,
@@ -55,6 +85,15 @@ function Tokens() {
         ...contentModal,
         isOpen: false
       })} />
+      <Modal isOpen={transformModal.isOpen} heading={transformModal.heading} components={{
+        Body: () => <AddToken tokens={transformModal.tokens} />
+      }} onClose={() => {
+        setTransformModal({
+          ...transformModal,
+          isOpen: false
+        })
+        clearPlatforms();
+      }} />
     </>
   )
 }

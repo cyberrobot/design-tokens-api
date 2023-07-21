@@ -1,4 +1,11 @@
-export const transformGroup = [
+function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
+  return o.reduce((res: { [K in T]: K }, key: T) => {
+    res[key] = key;
+    return res;
+  }, Object.create(null) as { [K in T]: K });
+}
+
+export const transformGroups = [
   "web",
   "js",
   "scss",
@@ -14,7 +21,9 @@ export const transformGroup = [
   "flutter",
   "flutter-separate",
   "react-native",
-] as const;
+];
+
+export const transformGroupsEnum = strEnum(transformGroups);
 
 export const transforms = [
   "attribute/cti",
@@ -69,7 +78,9 @@ export const transforms = [
   "asset/flutter/literal",
   "font/flutter/literal",
   "size/flutter/remToDouble",
-] as const;
+];
+
+export const transformsEnum = strEnum(transforms);
 
 export const formats = [
   "css/variables",
@@ -115,7 +126,9 @@ export const formats = [
   "sketch/palette",
   "sketch/palette/v2",
   "flutter/class.dart",
-] as const;
+];
+
+export const formatsEnum = strEnum(formats);
 
 export const sdBuildFolder = `${
   process.env.NODE_ENV === "development" ? "" : "/"

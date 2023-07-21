@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { transforms, formats, transformGroup } from "~/constants";
+import { transformsEnum, formatsEnum, transformGroupsEnum } from "~/constants";
 
 export const PlatformSchema = z.object({
   name: z.string(),
-  transformGroup: z.enum(transformGroup).optional(),
-  transforms: z.array(z.enum(transforms)).optional(),
-  formats: z.array(z.enum(formats)),
+  transformGroup: z.string(transformGroupsEnum).optional(),
+  transforms: z.array(z.string(transformsEnum)).optional(),
+  formats: z.array(z.string(formatsEnum)),
 });
 
 export const TokenSchema = z.object({
