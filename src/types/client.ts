@@ -7,3 +7,7 @@ export type DefaultProps<T> = {
 export type TSelect<T> = {
   defaultValues: T[];
 };
+
+export type FileExtensions = {
+  [key: string]: string | undefined;
+};

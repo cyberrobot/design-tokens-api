@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
 import { type Token } from '~/types/server';
+import { getZips } from '~/utils/get-zips';
 
 function AddToken({ tokens }: { tokens: FileImport[] }) {
   const namespaceRef = useRef<HTMLInputElement>(null);
@@ -30,6 +31,21 @@ function AddToken({ tokens }: { tokens: FileImport[] }) {
       }]
     });
   }, [namespaceRef.current?.value, platforms, tokens])
+
+  useEffect(() => {
+    if (query.data) {
+      query.data.tokens.forEach(token => {
+        if (token.platforms) {
+          token.platforms.forEach(platform => {
+            if (platform.formats) {
+              getZips(platform.formats)
+            }
+          })
+        }
+      })
+    }
+  }, [query.data])
+
 
 
   const exportHandler = () => {

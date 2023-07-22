@@ -19,7 +19,7 @@ export default function Dropdown<T extends string>({ value = [], multiSelect = f
     if (closeOnSelect) {
       menuRef.current?.removeAttribute('open')
     }
-  }, [])
+  }, [closeOnSelect])
 
   const getItems = useCallback(() => value?.map(item => {
     let match;
