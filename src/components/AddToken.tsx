@@ -59,7 +59,7 @@ function AddToken({ tokens }: { tokens: FileImport[] }) {
   return (
     <main>
       <div className="my-4"><span className="text-accent">{tokens.map(token => token.id).join(', ')}</span></div>
-      <div className="mt-4">Multiple tokens will be merged.</div>
+      {tokens.length > 1 && <div className="mt-4">Multiple tokens will be merged.</div>}
       <div className="divider"></div>
       <label>Namespace</label>
       <div className="join gap-6 my-3">
