@@ -1,4 +1,13 @@
-import { type Endpoints } from "@octokit/types";
+export type { Tokens } from "~/types/server";
 
-export type GitHubResponse =
-  Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["response"];
+export type DefaultProps<T> = {
+  [K in keyof T]: T[K];
+};
+
+export type TSelect<T> = {
+  defaultValues: T[];
+};
+
+export type FileExtensions = {
+  [key: string]: string | undefined;
+};

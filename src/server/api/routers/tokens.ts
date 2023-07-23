@@ -9,9 +9,10 @@ import { TokensSchema } from "~/schemas/server";
 import { type Response } from "~/types/server";
 import { sdBuildFolder } from "~/constants";
 import { removeFiles } from "~/utils/remove-file";
+import { prisma } from "~/server/db";
 
-export const getToken = createTRPCRouter({
-  get: publicProcedure
+export const getTokens = createTRPCRouter({
+  getToken: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -57,4 +58,11 @@ export const getToken = createTRPCRouter({
       // TODO: Add input validation for non-tRPC requests
       return null;
     }),
+  getTokens: publicProcedure.query(async () => {
+    const rows = await prisma.fileImport.findMany();
+    if (rows) {
+      return rows;
+    }
+    return [];
+  }),
 });

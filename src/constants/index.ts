@@ -1,4 +1,13 @@
-export const transformGroup = [
+import { type FileExtensions } from "~/types/client";
+
+function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
+  return o.reduce((res: { [K in T]: K }, key: T) => {
+    res[key] = key;
+    return res;
+  }, Object.create(null) as { [K in T]: K });
+}
+
+export const transformGroups = [
   "web",
   "js",
   "scss",
@@ -14,7 +23,9 @@ export const transformGroup = [
   "flutter",
   "flutter-separate",
   "react-native",
-] as const;
+];
+
+export const transformGroupsEnum = strEnum(transformGroups);
 
 export const transforms = [
   "attribute/cti",
@@ -69,7 +80,9 @@ export const transforms = [
   "asset/flutter/literal",
   "font/flutter/literal",
   "size/flutter/remToDouble",
-] as const;
+];
+
+export const transformsEnum = strEnum(transforms);
 
 export const formats = [
   "css/variables",
@@ -115,7 +128,59 @@ export const formats = [
   "sketch/palette",
   "sketch/palette/v2",
   "flutter/class.dart",
-] as const;
+];
+
+enum fileExtensionsEnum {
+  "css/variables" = "css",
+  "scss/map-flat" = "scss",
+  "scss/map-deep" = "scss",
+  "scss/variables" = "scss",
+  "scss/icons" = "scss",
+  "less/variables" = "less",
+  "less/icons" = "less",
+  "stylus/variables" = "styl",
+  "javascript/module" = "js",
+  "javascript/module-flat" = "js",
+  "javascript/object" = "js",
+  "javascript/umd" = "js",
+  "javascript/es6" = "js",
+  "typescript/es6-declarations" = "ts",
+  "typescript/module-declarations" = "ts",
+  "android/resources" = "xml",
+  "android/colors" = "xml",
+  "android/dimens" = "xml",
+  "android/fontDimens" = "xml",
+  "android/integers" = "xml",
+  "android/strings" = "xml",
+  "compose/object" = "kt",
+  "ios/macros" = "m",
+  "ios/plist" = "plist",
+  "ios/singleton.m" = "m",
+  "ios/singleton.h" = "h",
+  "ios/static.h" = "h",
+  "ios/static.m" = "m",
+  "ios/colors.h" = "h",
+  "ios/colors.m" = "m",
+  "ios/strings.h" = "h",
+  "ios/strings.m" = "m",
+  "ios-swift/class.swift" = "swift",
+  "ios-swift/enum.swift" = "swift",
+  "ios-swift/any.swift" = "swift",
+  "css/fonts.css" = "css",
+  "json" = "json",
+  "json/asset" = "json",
+  "json/nested" = "json",
+  "json/flat" = "json",
+  "sketch/palette" = "sketchpalette",
+  "sketch/palette/v2" = "sketchpalette",
+  "flutter/class.dart" = "dart",
+}
+
+export const fileExtensions: FileExtensions = {
+  ...fileExtensionsEnum,
+};
+
+export const formatsEnum = strEnum(formats);
 
 export const sdBuildFolder = `${
   process.env.NODE_ENV === "development" ? "" : "/"
