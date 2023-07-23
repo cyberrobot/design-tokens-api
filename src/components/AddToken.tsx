@@ -6,6 +6,7 @@ import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
 import { type Token } from '~/types/server';
 import { getZips } from '~/utils/get-zips';
+import ListTokens from './ListTokens';
 
 function AddToken({ tokens }: { tokens: FileImport[] }) {
   const namespaceRef = useRef<HTMLInputElement>(null);
@@ -58,7 +59,7 @@ function AddToken({ tokens }: { tokens: FileImport[] }) {
 
   return (
     <main>
-      <div className="my-4"><span className="text-accent">{tokens.map(token => token.id).join(', ')}</span></div>
+      <div className="my-4"><ListTokens tokens={tokens} /></div>
       {tokens.length > 1 && <div className="mt-4">Multiple tokens will be merged.</div>}
       <div className="divider"></div>
       <label>Namespace</label>

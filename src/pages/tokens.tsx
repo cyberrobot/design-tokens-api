@@ -4,12 +4,19 @@ import Modal from '~/components/Modal';
 import AddToken from '~/components/AddToken';
 import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
+import TokenContent from '~/components/TokenContent';
 
 function Tokens() {
-  const [contentModal, setContentModal] = useState({
+  const [contentModal, setContentModal] = useState<{
+    heading: string;
+    body: string;
+    isOpen: boolean;
+    token: string;
+  }>({
     heading: '',
     body: '',
-    isOpen: false
+    isOpen: false,
+    token: ''
   });
   const [transformModal, setTransformModal] = useState<{
     heading: string;
@@ -53,7 +60,7 @@ function Tokens() {
                   <th></th>
                   <th>ID</th>
                   <th>Created</th>
-                  <th>Token</th>
+                  <th>Content</th>
                 </tr>
               </thead>
               <tbody>
@@ -66,8 +73,9 @@ function Tokens() {
                       <a href="" className="text-primary underline" onClick={(e) => {
                         e.preventDefault();
                         setContentModal({
-                          heading: `Token ${token.id}`,
+                          heading: `Token content`,
                           body: token.file,
+                          token: token.id,
                           isOpen: true
                         })
                       }}>View</a>
@@ -80,7 +88,7 @@ function Tokens() {
         </div>
       </main>
       <Modal isOpen={contentModal.isOpen} heading={contentModal.heading} components={{
-        Body: () => <pre className="text-sm py-4">{contentModal.body}</pre>
+        Body: () => <TokenContent token={contentModal.token} body={contentModal.body} />
       }} onClose={() => setContentModal({
         ...contentModal,
         isOpen: false
