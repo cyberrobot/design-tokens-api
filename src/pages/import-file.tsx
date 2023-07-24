@@ -1,37 +1,37 @@
 import Head from 'next/head';
-import React, { useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import TokenImportSource from '~/components/TokenImportSource';
+import { useTokenImportStore } from '~/stores/use-token-import';
 import { api } from '~/utils/api';
-import { FaGithub, FaCheck } from "react-icons/fa6";
+
 
 function ImportFile() {
-  const [gitHubPath, setGithubPath] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null)
-  const mutation = api.import.file.useMutation();
-  const query = api.import.github.useQuery({
-    path: inputRef.current?.value || '',
-  }, {
-    enabled: false,
-  });
-  const fileUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target?.files?.item(0);
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-      reader.onload = function (evt) {
-        if (evt?.target?.result) {
-          mutation.mutate({ file: (evt?.target?.result).toString() });
-        }
-      }
-    }
-  };
-  const githubImportHandler = () => {
-    const refetchFn = async () => {
-      await query.refetch();
-    };
+  const { updateToken, ...token } = useTokenImportStore(state => state);
+  const router = useRouter()
+  const mutation = api.import.save.useMutation();
+  const importHandler = () => {
+    mutation.mutate({
+      name: token.name,
+      description: token.description,
+      file: token.content
+    });
+  }
 
-    if (gitHubPath === '') return;
-    refetchFn().catch((err) => { console.log(err) });
-  };
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      router.push('/tokens').catch(err => console.log(err));
+    }
+
+    return () => {
+      updateToken({
+        name: '',
+        description: '',
+        content: ''
+      });
+    }
+  }, [mutation.isSuccess, router, updateToken])
 
   return (
     <>
@@ -39,29 +39,36 @@ function ImportFile() {
         <title>Import Design Tokens</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col gap-8 px-4 py-8 bg-[#15162c] rounded-md mt-5 shadow-sm">
-          <h2 className="text-5xl font-regular tracking-tight text-white sm:text-[2rem]">
-            GitHub import
-          </h2>
-          <div>
-            <p className="text-white">Enter the GitHub repository file path</p>
-            <div className="join mt-2">
-              <div className='join-item rounded-md bg-white flex items-center px-3 pr-[1px]'>
-                <FaGithub size={24} /><span className="ml-2">https://github.com/</span>
-              </div>
-              <input ref={inputRef} value={gitHubPath} onChange={(e) => setGithubPath(e.target.value)} type="text" placeholder="path/to/the/file" className="input input-bordered join-item pl-0 focus:outline-none border-l-0 w-96" />
-              <button className="btn btn-primary join-item" onClick={githubImportHandler}>Import {query.isFetching && <span className="loading loading-dots loading-sm"></span>}</button>
-            </div>
-            {query.isError && <p className="text-white">Error: {query.error.message}</p>}
-            {query.isSuccess && <div className="text-white flex justify-between w-[653px] mt-3"><span>{query.data?.file}</span><span className="badge badge-success"><FaCheck /></span></div>}
-          </div>
+      <main className="container flex flex-col items-center px-20 mx-auto">
+        <div className="mt-10 mb-6 self-start">
+          <h1 className='text-5xl font-bold tracking-tight'>New token</h1>
         </div>
-        <div className="container flex flex-col gap-8 px-4 py-8 bg-[#15162c] rounded-md mt-5 shadow-sm">
-          <h2 className="text-5xl font-regular tracking-tight text-white sm:text-[2rem]">
-            Upload file
-          </h2>
-          <input type="file" className="file-input file-input-bordered w-full max-w-xs" onChange={fileUploadHandler} />
+        <div className="flex gap-12 min-h-screen w-full">
+          <div className="config lg:w-[50%] md:w-full">
+            <div>
+              <div className="mb-4 flex flex-col">
+                <label htmlFor='token-name'>Name</label>
+                <input id="token-name" type="text" name="token.name" className='input input-bordered bg-base-content w-full mt-2 text-base-300' placeholder='Brand A - Color' onChange={e => updateToken({ name: e.target.value })} />
+              </div>
+              <div className="mb-4 flex flex-col">
+                <label>
+                  Description
+                </label>
+                <textarea name="token.description" className='input input-bordered bg-base-content w-full mt-2 py-2 h-24 max-h-24 min-h-[96px] text-base-300' placeholder='Color styles for Brand A. Do not override!' onChange={e => updateToken({ description: e.target.value })} />
+              </div>
+            </div>
+            <div className="mt-10">
+              <TokenImportSource />
+            </div>
+            <div className="py-8 flex justify-end gap-4">
+              <button className="btn btn-primary" onClick={() => importHandler()}>Save {mutation.isLoading && <span className="loading loading-dots loading-sm"></span>}</button>
+              <Link href="/tokens" className="btn btn-outline">Back</Link>
+            </div>
+          </div>
+          {token.content && <div className="token-preview lg:w-[50%] md:w-full">
+            <h2 className="mb-4 text-xl font-bold tracking-tight">Preview</h2>
+            <pre className="text-sm bg-neutral p-4 rounded-md h-[572px] overflow-y-auto">{token.content}</pre>
+          </div>}
         </div>
       </main>
     </>
