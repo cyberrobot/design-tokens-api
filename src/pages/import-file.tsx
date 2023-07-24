@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import TokenImportSource from '~/components/TokenImportSource';
 import { useTokenImportStore } from '~/stores/use-token-import';
 import { api } from '~/utils/api';
@@ -15,10 +16,22 @@ function ImportFile() {
       description: token.description,
       file: token.content
     });
+  }
+
+  useEffect(() => {
     if (mutation.isSuccess) {
       router.push('/tokens').catch(err => console.log(err));
     }
-  }
+
+    return () => {
+      updateToken({
+        name: '',
+        description: '',
+        content: ''
+      });
+    }
+  }, [mutation.isSuccess, router, updateToken])
+
   return (
     <>
       <Head>
