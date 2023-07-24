@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import TokenImportSource from '~/components/TokenImportSource';
@@ -59,8 +60,9 @@ function ImportFile() {
             <div className="mt-10">
               <TokenImportSource />
             </div>
-            <div className="py-8 flex justify-end">
-              <button className="btn btn-primary" onClick={() => importHandler()}>Import {mutation.isLoading && <span className="loading loading-dots loading-sm"></span>}</button>
+            <div className="py-8 flex justify-end gap-4">
+              <button className="btn btn-primary" onClick={() => importHandler()}>Save {mutation.isLoading && <span className="loading loading-dots loading-sm"></span>}</button>
+              <Link href="/tokens" className="btn btn-outline">Back</Link>
             </div>
           </div>
           {token.content && <div className="token-preview lg:w-[50%] md:w-full">

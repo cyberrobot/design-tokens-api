@@ -5,6 +5,8 @@ import AddToken from '~/components/AddToken';
 import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
 import TokenContent from '~/components/TokenContent';
+import { FaPlus } from 'react-icons/fa6';
+import Link from 'next/link';
 
 function Tokens() {
   const [contentModal, setContentModal] = useState<{
@@ -44,9 +46,12 @@ function Tokens() {
       <main className="flex min-h-screen flex-col items-center">
         <div className="container flex flex-col gap-8 p-8 bg-neutral rounded-md mt-8 shadow-sm">
           <div className="flex justify-between items-center">
-            <h2 className="text-5xl font-regular tracking-tight  sm:text-[2rem]">
-              Tokens
-            </h2>
+            <div className="join gap-3 items-center">
+              <h2 className="text-5xl font-regular tracking-tight  sm:text-[2rem]">
+                Tokens
+              </h2>
+              <Link className="btn btn-xs btn-outline btn-circle" href="/import-file"><FaPlus /></Link>
+            </div>
             {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
               ...transformModal,
               tokens: tokensToTransform,
