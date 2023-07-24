@@ -12,7 +12,9 @@ datasource db {
 }
 
 model FileImport {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    file      String @db.Text
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  file        String   @db.Text
+  name        String   @db.Text
+  description String   @db.Text
 }
