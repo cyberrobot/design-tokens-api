@@ -7,11 +7,12 @@ import { useTokenImportStore } from '~/stores/use-token-import';
 import { api } from '~/utils/api';
 
 
-function ImportFile() {
+function NewToken() {
   const { updateToken, ...token } = useTokenImportStore(state => state);
   const router = useRouter()
   const mutation = api.import.save.useMutation();
   const importHandler = () => {
+    if (!token.name || !token.content) return;
     mutation.mutate({
       name: token.name,
       description: token.description,
@@ -67,7 +68,7 @@ function ImportFile() {
           </div>
           {token.content && <div className="token-preview lg:w-[50%] md:w-full">
             <h2 className="mb-4 text-xl font-bold tracking-tight">Preview</h2>
-            <pre className="text-sm bg-neutral p-4 rounded-md h-[572px] overflow-y-auto">{token.content}</pre>
+            <pre className="text-sm bg-neutral p-4 rounded-md h-[516px] overflow-y-auto">{token.content}</pre>
           </div>}
         </div>
       </main>
@@ -75,4 +76,4 @@ function ImportFile() {
   )
 }
 
-export default ImportFile
+export default NewToken
