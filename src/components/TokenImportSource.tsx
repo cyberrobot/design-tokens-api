@@ -52,8 +52,8 @@ export default function TokenImportSource() {
         <button className={`${activeTab === 0 ? '' : 'btn-ghost'} btn btn-lg`} onClick={() => tabsHandler(0)}><FaGithub size={36} /></button>
         <button className={`btn ${activeTab === 1 ? '' : 'btn-ghost'} btn-lg`} onClick={() => tabsHandler(1)}><FaFileImport size={36} /></button>
       </div>
-      {activeTab === 0 && <div className="flex flex-col gap-8 px-4 py-8 bg-neutral rounded-md mt-5 shadow-sm">
-        <h2 className="text-2xl font-regular tracking-tight text-white">
+      {activeTab === 0 && <div className="flex flex-col gap-6 px-4 py-8 bg-neutral rounded-md mt-5 shadow-sm">
+        <h2 className="text-2xl font-regular tracking-tight">
           GitHub import
         </h2>
         <div>
@@ -68,8 +68,8 @@ export default function TokenImportSource() {
           {githubMutation.isError && <p className="text-white">Error: {githubMutation.error.message}</p>}
         </div>
       </div>}
-      {activeTab === 1 && <div className="flex flex-col gap-8 px-4 py-8 bg-neutral rounded-md mt-5 shadow-sm">
-        <h2 className="text-2xl font-regular tracking-tight text-white">
+      {activeTab === 1 && <div className="flex flex-col gap-6 px-4 py-8 bg-neutral rounded-md mt-5 shadow-sm">
+        <h2 className="text-2xl font-regular tracking-tight">
           Upload file
         </h2>
         <input type="file" className="file-input file-input-bordered w-full" onChange={fileUploadHandler} />

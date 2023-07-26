@@ -50,7 +50,7 @@ function Tokens() {
               <h2 className="text-5xl font-regular tracking-tight  sm:text-[2rem]">
                 Tokens
               </h2>
-              <Link className="btn btn-xs btn-outline btn-circle" href="/import-file"><FaPlus /></Link>
+              <Link className="btn btn-xs btn-outline btn-circle" href="/new-token"><FaPlus /></Link>
             </div>
             {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
               ...transformModal,
