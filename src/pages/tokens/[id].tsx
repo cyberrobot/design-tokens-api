@@ -41,7 +41,7 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
         <div className='text-xl'>{token.description}</div>
         <div className="flex gap-12 w-full mt-4">
           <div className="lg:w-[50%] md:w-full">
-            <div className="bg-neutral rounded-md">
+            <div className="bg-neutral rounded-md mb-6">
               <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Content</h2>
               <pre className="text-sm p-4">{token.file}</pre>
             </div>
