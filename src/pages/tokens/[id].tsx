@@ -44,19 +44,19 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
         <div className="flex flex-col xl:flex-row gap-12 w-full mt-4">
           <div className="w-full xl:w-[50%]">
             <div className="mb-6 bg-neutral rounded-md">
-              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Export</h2>
+              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Export config</h2>
               <div className="p-4">
                 <ExportToken tokens={[token]} />
               </div>
             </div>
             <div className="bg-neutral rounded-md">
-              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>API</h2>
+              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>API endpoint example</h2>
               <EndpointDisplay query={query} />
             </div>
           </div>
           <div className="w-full xl:w-[50%]">
             <div className="bg-neutral rounded-md mb-6">
-              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Content</h2>
+              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Source</h2>
               <pre className="text-sm p-4">{token.file}</pre>
             </div>
           </div>
