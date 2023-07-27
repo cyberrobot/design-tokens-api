@@ -40,11 +40,11 @@ function NewToken() {
         <title>Import Design Tokens</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="container flex flex-col items-center px-20 mx-auto">
+      <main className="container min-h-screen flex flex-col items-center px-20 mx-auto">
         <div className="mt-10 mb-6 self-start">
           <h1 className='text-5xl font-bold tracking-tight'>New token</h1>
         </div>
-        <div className="flex gap-12 min-h-screen w-full">
+        <div className="flex gap-12 w-full">
           <div className="config lg:w-[50%] md:w-full">
             <div>
               <div className="mb-4 flex flex-col">

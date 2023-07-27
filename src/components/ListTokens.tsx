@@ -1,10 +1,9 @@
+import { type FileImport } from '@prisma/client'
 
 export default function ListTokens({ tokens }: {
-  tokens: {
-    id: string
-  }[]
+  tokens: FileImport[]
 }) {
   return (
-    <span className="text-accent">{tokens.map(token => token.id).join(', ')}</span>
+    <span className="text-accent">{tokens.map(token => token.name).join(', ')}</span>
   )
 }
