@@ -6,6 +6,8 @@ import ExportToken from '~/components/ExportToken';
 import EndpointDisplay from '~/components/EndpointDisplay';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
 import Link from 'next/link';
+import RemoveToken from '~/components/RemoveToken';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps<{
   token: FileImport
@@ -29,6 +31,10 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
     const { updateState, ...input } = state;
     return input;
   });
+  const router = useRouter();
+  const onDeleteHandler = () => {
+    router.push('/tokens').catch(err => console.log(err));
+  }
   return (
     <>
       <Head>
@@ -49,9 +55,13 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
                 <ExportToken tokens={[token]} />
               </div>
             </div>
-            <div className="bg-neutral rounded-md">
+            <div className="bg-neutral rounded-md mb-6">
               <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>API endpoint example</h2>
               <EndpointDisplay query={query} />
+            </div>
+            <div className="bg-neutral rounded-md mb-6">
+              <h2 className='text-xl font-bold tracking-tight text-red-500 p-4 rounded-t-md border-b-[1px] border-red-500'>Danger - Remove token</h2>
+              <RemoveToken id={token.id} onDelete={onDeleteHandler} />
             </div>
           </div>
           <div className="w-full xl:w-[50%]">
