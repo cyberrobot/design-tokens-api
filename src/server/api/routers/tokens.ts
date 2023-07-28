@@ -65,4 +65,23 @@ export const getTokens = createTRPCRouter({
     }
     return [];
   }),
+  removeToken: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      if (input.id) {
+        try {
+          await prisma.fileImport.delete({
+            where: {
+              id: input.id,
+            },
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }),
 });
