@@ -11,10 +11,16 @@ datasource db {
   relationMode = "prisma"
 }
 
-model FileImport {
+model Import {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   file        String   @db.Text
   name        String   @db.Text
   description String   @db.Text
+}
+
+model Transforms {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  tokens      String   @db.Text
 }

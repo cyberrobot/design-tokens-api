@@ -1,7 +1,7 @@
 import { prisma } from "~/server/db";
 
 export const getDbRowById = (id: string) => {
-  return prisma.fileImport.findFirst({
+  return prisma.import.findFirst({
     where: {
       id,
     },

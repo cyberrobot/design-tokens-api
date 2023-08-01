@@ -1,21 +1,31 @@
-import { type FileImport } from '@prisma/client';
+import { type Import } from '@prisma/client';
 import AddPlatform from './AddPlatform';
 import ListPlatforms from './ListPlatforms';
 import { useEffect, useState } from 'react';
 import { usePlatformStore } from '~/stores/use-platform';
 import { api } from '~/utils/api';
-import { getZips } from '~/utils/get-zips';
 import ListTokens from './ListTokens';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
+import { type TransformTokenResponse } from '~/types/server';
 
-function ExportToken({ tokens, showTokens = false }: { tokens: FileImport[], showTokens?: boolean }) {
+function ExportToken({ tokens, showTokens = false }: { tokens: Import[], showTokens?: boolean }) {
   const id = tokens[0]?.id || '';
   const platforms = usePlatformStore((state) => state.platforms);
   const { updateState, ...input } = useTokenTransformStore();
   const [namespace, setNamespace] = useState('')
-  const query = api.tokens.getToken.useQuery(input, {
-    enabled: false
-  });
+  const transformMutation = api.tokens.transformToken.useMutation();
+  const saveMutation = api.tokens.saveToken.useMutation();
+  const saveMutationHandler = (tokens: TransformTokenResponse['tokens']) => {
+    saveMutation.mutate({
+      tokens: tokens.map(token => ({
+        namespace: token.namespace,
+        platforms: token.platforms?.map(platform => ({
+          name: platform.name,
+          formats: platform.formats,
+        }))
+      }))
+    })
+  }
 
   useEffect(() => {
     updateState({
@@ -27,28 +37,15 @@ function ExportToken({ tokens, showTokens = false }: { tokens: FileImport[], sho
     });
   }, [id, namespace, platforms, updateState])
 
-  useEffect(() => {
-    if (query.data) {
-      query.data.tokens.forEach(token => {
-        if (token.platforms) {
-          token.platforms.forEach(platform => {
-            if (platform.formats) {
-              getZips(platform.formats)
-            }
-          })
-        }
-      })
-    }
-  }, [query.data])
-
-
-
-  const exportHandler = () => {
-    const refetchFn = async () => {
-      await query.refetch();
-    };
+  const transformHandler = () => {
     if (!platforms.length) return;
-    refetchFn().catch((err) => { console.log(err) });
+    transformMutation.mutateAsync(input).then(response => {
+      if (!response) return;
+      saveMutationHandler(response?.tokens)
+    }).catch((error) => {
+      // Handle any errors that occurred during the Promise execution
+      console.error(error);
+    });
   }
 
   return (
@@ -66,7 +63,7 @@ function ExportToken({ tokens, showTokens = false }: { tokens: FileImport[], sho
       </div>
       <AddPlatform />
       <div className="modal-action">
-        <button className="btn btn-primary" onClick={exportHandler}>Export</button>
+        <button className="btn btn-primary btn-outline" onClick={transformHandler}>Transform</button>
       </div>
     </div>
   )

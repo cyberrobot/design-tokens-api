@@ -58,6 +58,7 @@ export const getErrorOutput = ({
 }): TokenOutput => {
   return {
     ...(namespace && { namespace }),
+    platforms: [],
     error: `No token for namespace was found.`,
   };
 };

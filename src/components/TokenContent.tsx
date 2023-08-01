@@ -1,7 +1,7 @@
-import { type FileImport } from '@prisma/client'
+import { type Import } from '@prisma/client'
 import ListTokens from './ListTokens'
 
-export default function TokenContent({ token, body }: { token: FileImport, body: string }) {
+export default function TokenContent({ token, body }: { token: Import, body: string }) {
   return (
     <>
       <div className="my-4">

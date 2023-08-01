@@ -5,26 +5,29 @@ import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { buildTokens } from "~/utils/build-file";
 import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
-import { TokensSchema } from "~/schemas/server";
-import { type Response } from "~/types/server";
+import { SaveTokenInputSchema, TokensSchema } from "~/schemas/server";
 import { sdBuildFolder } from "~/constants";
 import { removeFiles } from "~/utils/remove-file";
 import { prisma } from "~/server/db";
+import {
+  type TransformTokenResponse,
+  type SaveTokenResponse,
+} from "~/types/server";
 
 export const getTokens = createTRPCRouter({
-  getToken: publicProcedure
+  transformToken: publicProcedure
     .input(
       z.object({
         id: z.string(),
         tokens: TokensSchema,
       })
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       if (input.id && input.tokens) {
         const buildPath = `${sdBuildFolder}${input.id}/`;
         const row = await getDbRowById(input.id);
         if (row) {
-          const response: Response = {
+          const response: TransformTokenResponse = {
             id: input.id,
             tokens: [],
           };
@@ -59,12 +62,30 @@ export const getTokens = createTRPCRouter({
       return null;
     }),
   getTokens: publicProcedure.query(async () => {
-    const rows = await prisma.fileImport.findMany();
+    const rows = await prisma.import.findMany();
     if (rows) {
       return rows;
     }
     return [];
   }),
+  saveToken: publicProcedure
+    .input(SaveTokenInputSchema)
+    .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
+      if (input.tokens.length) {
+        try {
+          const token = await prisma.transforms.create({
+            data: {
+              tokens: JSON.stringify(input.tokens),
+            },
+          });
+          return token;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }
+      return null;
+    }),
   removeToken: publicProcedure
     .input(
       z.object({
@@ -74,7 +95,7 @@ export const getTokens = createTRPCRouter({
     .mutation(async ({ input }) => {
       if (input.id) {
         try {
-          await prisma.fileImport.delete({
+          await prisma.import.delete({
             where: {
               id: input.id,
             },

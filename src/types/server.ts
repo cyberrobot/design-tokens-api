@@ -5,29 +5,30 @@ import {
   type PlatformSchema,
   type TokensSchema,
   type TokenSchema,
+  type TokenOutputSchema,
+  type PlatformOutputSchema,
+  type TokenPlatformFormatSchema,
+  type TransformTokenResponseSchema,
 } from "~/schemas/server";
 
-export type Response = {
+// export type TokenTransform = {
+//   id: string;
+//   tokens: TokenOutput[];
+// };
+export type SaveTokenResponse = {
   id: string;
-  tokens: TokenOutput[];
+  tokens: string;
 };
 
-export type TokenPlatformFormat = {
-  name: string;
-  value: string;
-};
+export type TransformTokenResponse = z.infer<
+  typeof TransformTokenResponseSchema
+>;
 
-export type PlatformOutput = {
-  name: string;
-  formats?: TokenPlatformFormat[];
-  error?: string;
-};
+export type TokenPlatformFormat = z.infer<typeof TokenPlatformFormatSchema>;
 
-export type TokenOutput = {
-  namespace?: string;
-  platforms?: PlatformOutput[];
-  error?: string;
-};
+export type PlatformOutput = z.infer<typeof PlatformOutputSchema>;
+
+export type TokenOutput = z.infer<typeof TokenOutputSchema>;
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 
