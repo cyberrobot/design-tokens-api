@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { type FileImport } from '@prisma/client';
+import { type Imports } from '@prisma/client';
 import { prisma } from '~/server/db';
-import ExportToken from '~/components/ExportToken';
+import ExportToken from '~/components/TransformToken';
 import EndpointDisplay from '~/components/EndpointDisplay';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
 import Link from 'next/link';
@@ -10,9 +10,9 @@ import RemoveToken from '~/components/RemoveToken';
 import { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps<{
-  token: FileImport
+  token: Imports
 }> = async ({ params }) => {
-  const token = await prisma.fileImport.findFirst({
+  const token = await prisma.imports.findFirst({
     where: {
       id: params?.id as string,
     },
@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   return {
     props: {
-      token: JSON.parse(JSON.stringify(token)) as FileImport
+      token: JSON.parse(JSON.stringify(token)) as Imports
     }
   }
 }

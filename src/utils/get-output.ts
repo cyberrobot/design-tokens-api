@@ -32,6 +32,7 @@ export const getTokenOutput = ({
             const formatOutput: TokenPlatformFormat = {
               name: format,
               value: fs.readFileSync(`${buildPath}${file}`).toString(),
+              url: "",
             };
             if (formatOutput && platformOutput.formats) {
               platformOutput.formats.push(formatOutput);
@@ -58,6 +59,7 @@ export const getErrorOutput = ({
 }): TokenOutput => {
   return {
     ...(namespace && { namespace }),
+    platforms: [],
     error: `No token for namespace was found.`,
   };
 };

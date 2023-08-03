@@ -1,22 +1,12 @@
 import Head from "next/head";
-import { useState } from 'react';
 import { host } from '~/constants';
-import { type Tokens } from '~/types/server';
 import { api } from '~/utils/api';
 
 export default function Home() {
-  const [input, setInput] = useState<{
-    id: string;
-    tokens: Tokens
-  }>({
-    id: '',
-    tokens: []
-  })
-
-  const query = api.tokens.getToken.useQuery(input);
+  const mutation = api.tokens.transformToken.useMutation();
 
   const tokenRequestHandler = () => {
-    setInput({
+    mutation.mutate({
       id: 'cljihsyj900004kqy1z0ksu7c',
       tokens: [{
         platforms: [{
@@ -89,7 +79,7 @@ Content-Type: application/json
 `}
               </pre>
             </div>
-            {query.data && <div><h3 className="text-xl font-bold text-white mb-3">
+            {mutation.data && <div><h3 className="text-xl font-bold text-white mb-3">
               Response
             </h3>
               <pre className="bg-white p-3 pt-0 w-[1000px] overflow-auto text-sm rounded-md">
@@ -97,7 +87,7 @@ Content-Type: application/json
                   {`
 HTTP/1.0 200 OK
 Content-Type: application/json
-${JSON.stringify(query.data, null, 2)}
+${JSON.stringify(mutation.data, null, 2)}
 `}
                 </code>
               </pre></div>}
