@@ -62,7 +62,7 @@ export const getTokens = createTRPCRouter({
       return null;
     }),
   getTokens: publicProcedure.query(async () => {
-    const rows = await prisma.import.findMany();
+    const rows = await prisma.imports.findMany();
     if (rows) {
       return rows;
     }
@@ -70,18 +70,51 @@ export const getTokens = createTRPCRouter({
   }),
   saveToken: publicProcedure
     .input(SaveTokenInputSchema)
-    .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
-      if (input.tokens.length) {
+    .mutation(({ input }): SaveTokenResponse | null => {
+      if (input.token) {
         try {
-          const token = await prisma.transforms.create({
-            data: {
-              tokens: JSON.stringify(input.tokens),
-            },
-          });
-          return token;
+          const token = input.token;
+          prisma.transforms
+            .create({
+              data: {
+                platforms: {
+                  create: token.platforms.map((platform) => {
+                    return {
+                      name: platform.name,
+                      formats: {
+                        create: platform.formats,
+                      },
+                    };
+                  }),
+                },
+                version: "0.0.1",
+              },
+            })
+            .then(async (transform) => {
+              await prisma.imports.update({
+                where: {
+                  id: input.id,
+                },
+                data: {
+                  transforms: {
+                    connect: {
+                      id: transform.id,
+                    },
+                  },
+                },
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+          return {
+            success: true,
+          };
         } catch (error) {
           console.error(error);
-          return null;
+          return {
+            success: false,
+          };
         }
       }
       return null;
@@ -95,7 +128,7 @@ export const getTokens = createTRPCRouter({
     .mutation(async ({ input }) => {
       if (input.id) {
         try {
-          await prisma.import.delete({
+          await prisma.imports.delete({
             where: {
               id: input.id,
             },

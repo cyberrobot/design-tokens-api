@@ -1,9 +1,9 @@
 import { appRouter } from "~/server/api/root";
-import { type Import } from "@prisma/client";
+import { type Imports } from "@prisma/client";
 import { prismaMock } from "../../../../../singleton";
 
 test("import", async () => {
-  const mockImport: Import = {
+  const mockImport: Imports = {
     id: "test",
     file: "test",
     createdAt: new Date(),
@@ -11,7 +11,7 @@ test("import", async () => {
     description: "description",
   };
 
-  prismaMock.import.create.mockResolvedValue(mockImport);
+  prismaMock.imports.create.mockResolvedValue(mockImport);
 
   const caller = appRouter.createCaller({
     prisma: prismaMock,
@@ -19,5 +19,5 @@ test("import", async () => {
 
   const result = await caller.import.file(mockImport);
 
-  expect(result.file).toStrictEqual(mockImport.file);
+  expect(result).toStrictEqual(mockImport.file);
 });

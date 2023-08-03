@@ -6,21 +6,48 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-model Import {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  file        String   @db.Text
-  name        String   @db.Text
-  description String   @db.Text
+model Imports {
+  id          String       @id @unique @default(cuid())
+  createdAt   DateTime     @default(now())
+  file        String       @db.Text
+  name        String
+  description String?
+  transforms  Transforms[]
 }
 
 model Transforms {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  tokens      String   @db.Text
+  id        String      @id @unique @default(cuid())
+  createdAt DateTime    @default(now())
+  platforms Platforms[]
+  import    Imports?    @relation(fields: [importsId], references: [id])
+  version   String
+  importsId String?
+
+  @@index([importsId])
+}
+
+model Platforms {
+  id           String     @id @unique @default(cuid())
+  name         String
+  transform    Transforms @relation(fields: [transformsId], references: [id])
+  transformsId String
+  formats      Formats[]
+
+  @@index([transformsId])
+}
+
+model Formats {
+  id          String    @id @unique @default(cuid())
+  name        String
+  value       String    @db.Text
+  url         String
+  platform    Platforms @relation(fields: [platformsId], references: [id])
+  platformsId String
+
+  @@index([platformsId])
 }

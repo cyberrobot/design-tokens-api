@@ -1,4 +1,4 @@
-import { type Import } from '@prisma/client';
+import { type Imports } from '@prisma/client';
 import AddPlatform from './AddPlatform';
 import ListPlatforms from './ListPlatforms';
 import { useEffect, useState } from 'react';
@@ -8,23 +8,27 @@ import ListTokens from './ListTokens';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
 import { type TransformTokenResponse } from '~/types/server';
 
-function ExportToken({ tokens, showTokens = false }: { tokens: Import[], showTokens?: boolean }) {
+function ExportToken({ tokens, showTokens = false }: { tokens: Imports[], showTokens?: boolean }) {
   const id = tokens[0]?.id || '';
   const platforms = usePlatformStore((state) => state.platforms);
   const { updateState, ...input } = useTokenTransformStore();
   const [namespace, setNamespace] = useState('')
   const transformMutation = api.tokens.transformToken.useMutation();
   const saveMutation = api.tokens.saveToken.useMutation();
-  const saveMutationHandler = (tokens: TransformTokenResponse['tokens']) => {
-    saveMutation.mutate({
-      tokens: tokens.map(token => ({
-        namespace: token.namespace,
-        platforms: token.platforms?.map(platform => ({
-          name: platform.name,
-          formats: platform.formats,
-        }))
-      }))
-    })
+  const saveMutationHandler = (response: TransformTokenResponse) => {
+    const token = response.tokens[0];
+    if (token) {
+      saveMutation.mutate({
+        id: response.id,
+        token: {
+          namespace: token.namespace,
+          platforms: token.platforms?.map(platform => ({
+            name: platform.name,
+            formats: platform.formats,
+          }))
+        }
+      })
+    }
   }
 
   useEffect(() => {
@@ -41,7 +45,7 @@ function ExportToken({ tokens, showTokens = false }: { tokens: Import[], showTok
     if (!platforms.length) return;
     transformMutation.mutateAsync(input).then(response => {
       if (!response) return;
-      saveMutationHandler(response?.tokens)
+      saveMutationHandler(response)
     }).catch((error) => {
       // Handle any errors that occurred during the Promise execution
       console.error(error);

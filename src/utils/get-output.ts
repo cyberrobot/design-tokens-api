@@ -32,6 +32,7 @@ export const getTokenOutput = ({
             const formatOutput: TokenPlatformFormat = {
               name: format,
               value: fs.readFileSync(`${buildPath}${file}`).toString(),
+              url: "",
             };
             if (formatOutput && platformOutput.formats) {
               platformOutput.formats.push(formatOutput);

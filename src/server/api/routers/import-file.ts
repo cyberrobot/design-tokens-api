@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Octokit } from "octokit";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
-import { type Import } from "@prisma/client";
+import { type Imports } from "@prisma/client";
 import { type ContentsRepoResponseData } from "~/types/client";
 
 export const importRouter = createTRPCRouter({
@@ -50,8 +50,8 @@ export const importRouter = createTRPCRouter({
         file: z.string(),
       })
     )
-    .mutation(async ({ input }): Promise<Import> => {
-      const fileImport = await prisma.import.create({
+    .mutation(async ({ input }): Promise<Imports> => {
+      const fileImport = await prisma.imports.create({
         data: {
           file: input.file,
           name: input.name,
