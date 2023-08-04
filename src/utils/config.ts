@@ -4,6 +4,7 @@ import {
   type Platform as SDPlatform,
 } from "style-dictionary";
 import { type Platform, type Platforms } from "~/types/server";
+import { getFileExtensionByFormat } from "./get-file-extension-by-format";
 
 const getPlatform = ({
   config,
@@ -17,8 +18,11 @@ const getPlatform = ({
     ...(config.transforms && { transforms: config.transforms }),
     buildPath: buildPath,
     files: config.formats?.map((format) => {
+      const ext = getFileExtensionByFormat(format);
       return {
-        destination: `${config.name}-${format.replace("/", "-")}.tokens`,
+        destination: `${config.name}-${format.replace("/", "-")}.${
+          ext ? ext : "tokens"
+        }`,
         format: format,
         options: {
           showFileHeader: false,

@@ -7,12 +7,12 @@ import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
 import { SaveTokenInputSchema, TokensSchema } from "~/schemas/server";
 import { sdBuildFolder } from "~/constants";
-import { removeFiles } from "~/utils/remove-file";
 import { prisma } from "~/server/db";
 import {
   type TransformTokenResponse,
   type SaveTokenResponse,
 } from "~/types/server";
+import { getRemoteUrlForFormat } from "~/utils/get-remote-url-for-format";
 
 export const getTokens = createTRPCRouter({
   transformToken: publicProcedure
@@ -47,7 +47,6 @@ export const getTokens = createTRPCRouter({
                 buildPath: buildPath,
               });
               response.tokens.push(output);
-              removeFiles(buildPath);
             } else {
               const errorOutput = getErrorOutput({
                 namespace: token.namespace,
@@ -70,7 +69,7 @@ export const getTokens = createTRPCRouter({
   }),
   saveToken: publicProcedure
     .input(SaveTokenInputSchema)
-    .mutation(({ input }): SaveTokenResponse | null => {
+    .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
       if (input.token) {
         try {
           const token = input.token;
@@ -78,14 +77,28 @@ export const getTokens = createTRPCRouter({
             .create({
               data: {
                 platforms: {
-                  create: token.platforms.map((platform) => {
-                    return {
-                      name: platform.name,
-                      formats: {
-                        create: platform.formats,
-                      },
-                    };
-                  }),
+                  create: await Promise.all(
+                    token.platforms.map(async (platform) => {
+                      return {
+                        name: platform.name,
+                        formats: {
+                          create: await Promise.all(
+                            platform.formats.map(async (format) => {
+                              console.log("In promise url: ");
+                              const url = await getRemoteUrlForFormat({
+                                id: input.id,
+                                format,
+                              });
+                              return {
+                                ...format,
+                                url,
+                              } as typeof format;
+                            })
+                          ),
+                        },
+                      };
+                    })
+                  ),
                 },
                 version: "0.0.1",
               },
