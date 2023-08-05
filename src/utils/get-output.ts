@@ -25,8 +25,10 @@ export const getTokenOutput = ({
 
     fs.readdirSync(buildPath).forEach((file) => {
       // Filename - ".tokens" length
-      const filename = file.split(".")[0];
-      if (platform.formats) {
+      const fileArray = file.split(".");
+      const filename = fileArray.slice(0, fileArray.length - 1).join(".");
+      const ext = fileArray[fileArray.length - 1];
+      if (platform.formats && ext) {
         for (const format of platform.formats) {
           if (filename === `${platform.name}-${format.replaceAll("/", "-")}`) {
             const fileString = fs
@@ -34,7 +36,7 @@ export const getTokenOutput = ({
               .toString();
             const formatOutput: TokenPlatformFormat = {
               name: filename,
-              ext: file.split(".")[1] || "tokens",
+              ext: ext || "tokens",
               value: fileString,
             };
             if (formatOutput && platformOutput.formats) {

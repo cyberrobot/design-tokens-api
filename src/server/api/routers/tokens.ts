@@ -84,7 +84,6 @@ export const getTokens = createTRPCRouter({
                         formats: {
                           create: await Promise.all(
                             platform.formats.map(async (format) => {
-                              console.log("In promise url: ");
                               const url = await getRemoteUrlForFormat({
                                 id: input.id,
                                 format,

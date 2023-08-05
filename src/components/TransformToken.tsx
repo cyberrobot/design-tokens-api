@@ -67,7 +67,7 @@ function ExportToken({ tokens, showTokens = false }: { tokens: Imports[], showTo
       </div>
       <AddPlatform />
       <div className="modal-action">
-        <button className="btn btn-primary btn-outline" onClick={transformHandler}>Transform</button>
+        <button className="btn btn-primary btn-outline" onClick={transformHandler}>Transform {(transformMutation.isLoading || saveMutation.isLoading) && <span className="loading loading-dots loading-sm"></span>}</button>
       </div>
     </div>
   )
