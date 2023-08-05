@@ -73,8 +73,16 @@ export const getTokens = createTRPCRouter({
       if (input.token) {
         try {
           const token = input.token;
-          prisma.transforms
-            .create({
+          const transform = await prisma.transforms.create({
+            data: {
+              version: "0.0.1",
+            },
+          });
+          await prisma.transforms
+            .update({
+              where: {
+                id: transform.id,
+              },
               data: {
                 platforms: {
                   create: await Promise.all(
@@ -86,6 +94,7 @@ export const getTokens = createTRPCRouter({
                             platform.formats.map(async (format) => {
                               const url = await getRemoteUrlForFormat({
                                 id: input.id,
+                                version: transform.id,
                                 format,
                               });
                               return {
@@ -99,7 +108,6 @@ export const getTokens = createTRPCRouter({
                     })
                   ),
                 },
-                version: "0.0.1",
               },
             })
             .then(async (transform) => {
