@@ -74,9 +74,7 @@ export const getTokens = createTRPCRouter({
         try {
           const token = input.token;
           const transform = await prisma.transforms.create({
-            data: {
-              version: "0.0.1",
-            },
+            data: {},
           });
           await prisma.transforms
             .update({

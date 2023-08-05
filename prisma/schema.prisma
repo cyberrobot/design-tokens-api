@@ -25,7 +25,6 @@ model Transforms {
   createdAt DateTime    @default(now())
   platforms Platforms[]
   import    Imports?    @relation(fields: [importsId], references: [id])
-  version   String
   importsId String?
 
   @@index([importsId])
