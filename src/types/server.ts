@@ -9,6 +9,7 @@ import {
   type PlatformOutputWithErrorSchema,
   type TokenPlatformFormatSchema,
   type TransformTokenResponseSchema,
+  type SaveTokenInputSchema,
 } from "~/schemas/server";
 
 // export type TokenTransform = {
@@ -22,6 +23,8 @@ export type SaveTokenResponse = {
 export type TransformTokenResponse = z.infer<
   typeof TransformTokenResponseSchema
 >;
+
+export type TSaveTokenInput = z.infer<typeof SaveTokenInputSchema>;
 
 export type TokenPlatformFormat = z.infer<typeof TokenPlatformFormatSchema>;
 

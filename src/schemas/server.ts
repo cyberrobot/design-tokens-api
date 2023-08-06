@@ -17,8 +17,9 @@ export const TokensSchema = z.array(TokenSchema);
 
 export const TokenPlatformFormatSchema = z.object({
   name: z.string(),
+  ext: z.string(),
   value: z.string(),
-  url: z.string(),
+  url: z.string().optional(),
 });
 
 export const PlatformOutputWithErrorSchema = z.object({

@@ -25,7 +25,6 @@ model Transforms {
   createdAt DateTime    @default(now())
   platforms Platforms[]
   import    Imports?    @relation(fields: [importsId], references: [id])
-  version   String
   importsId String?
 
   @@index([importsId])
@@ -45,7 +44,8 @@ model Formats {
   id          String    @id @unique @default(cuid())
   name        String
   value       String    @db.Text
-  url         String
+  ext         String
+  url         String?
   platform    Platforms @relation(fields: [platformsId], references: [id])
   platformsId String
 
