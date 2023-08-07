@@ -126,6 +126,7 @@ export const getTokens = createTRPCRouter({
               console.error(error);
             });
           return {
+            transformId: transform.id,
             success: true,
           };
         } catch (error) {

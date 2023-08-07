@@ -3,11 +3,11 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { type Imports } from '@prisma/client';
 import { prisma } from '~/server/db';
 import ExportToken from '~/components/TransformToken';
-import EndpointDisplay from '~/components/EndpointDisplay';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
 import Link from 'next/link';
 import RemoveToken from '~/components/RemoveToken';
 import { useRouter } from 'next/router';
+import Transforms from '~/components/Transforms';
 
 export const getServerSideProps: GetServerSideProps<{
   token: Imports
@@ -56,8 +56,10 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
               </div>
             </div>
             <div className="bg-neutral rounded-md mb-6">
-              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>API endpoint example</h2>
-              <EndpointDisplay query={query} />
+              <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Transforms</h2>
+              <div className="p-4">
+                <Transforms importId={token.id} />
+              </div>
             </div>
             <div className="bg-neutral rounded-md mb-6">
               <h2 className='text-xl font-bold tracking-tight text-red-500 p-4 rounded-t-md border-b-[1px] border-red-500'>Danger - Remove token</h2>

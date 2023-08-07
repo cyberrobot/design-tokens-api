@@ -1,6 +1,7 @@
 import { importRouter } from "~/server/api/routers/import-file";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { getTokens } from "./routers/tokens";
+import { getTransforms } from "./routers/transforms";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { getTokens } from "./routers/tokens";
 export const appRouter = createTRPCRouter({
   import: importRouter,
   tokens: getTokens,
+  transforms: getTransforms,
 });
 
 // export type definition of API
