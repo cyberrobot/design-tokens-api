@@ -1,12 +1,20 @@
-import { type Imports } from '@prisma/client'
-import ListTokens from './ListTokens'
+import { Highlight, themes } from "prism-react-renderer"
 
-export default function TokenContent({ token, body }: { token: Imports, body: string }) {
+export default function TokenContent({ body }: { body: string }) {
   return (
-    <>
-      <div className="my-4">
-        <ListTokens tokens={[token]} />
-      </div>
-      <pre className="text-sm py-4">{body}</pre></>
+    <Highlight theme={themes.vsDark} code={body} language='jsx'>
+      {({ style, tokens, getLineProps, getTokenProps }) => (
+        <pre style={style} className="p-4 rounded-md">
+          {tokens.map((line, i) => (
+            <div key={i} {...getLineProps({ line })}>
+              <span className="mr-4">{i + 1}</span>
+              {line.map((token, key) => (
+                <span key={key} {...getTokenProps({ token })} />
+              ))}
+            </div>
+          ))}
+        </pre>
+      )}
+    </Highlight>
   )
 }
