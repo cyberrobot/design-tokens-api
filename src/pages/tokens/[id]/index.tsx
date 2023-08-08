@@ -7,6 +7,7 @@ import Link from 'next/link';
 import RemoveToken from '~/components/RemoveToken';
 import { useRouter } from 'next/router';
 import Transforms from '~/components/Transforms';
+import TokenContent from '~/components/TokenContent';
 
 export const getServerSideProps: GetServerSideProps<{
   token: Imports
@@ -63,7 +64,9 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
           <div className="w-full xl:w-[50%]">
             <div className="bg-neutral rounded-md mb-6">
               <h2 className='text-xl font-bold tracking-tight text-accent p-4 rounded-t-md border-b-[1px] border-accent'>Source</h2>
-              <pre className="text-sm p-4">{token.file}</pre>
+              <div className="p-4">
+                <TokenContent body={token.file} />
+              </div>
             </div>
           </div>
         </div>
