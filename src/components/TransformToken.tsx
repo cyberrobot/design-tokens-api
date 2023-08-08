@@ -7,6 +7,7 @@ import { api } from '~/utils/api';
 import ListTokens from './ListTokens';
 import { useTokenTransformStore } from '~/stores/use-token-transform';
 import { type TransformTokenResponse } from '~/types/server';
+import { useTransformsStore } from '~/stores/use-transforms';
 
 function ExportToken({ tokens, showTokens = false }: { tokens: Imports[], showTokens?: boolean }) {
   const id = tokens[0]?.id || '';
@@ -15,10 +16,11 @@ function ExportToken({ tokens, showTokens = false }: { tokens: Imports[], showTo
   const [namespace, setNamespace] = useState('')
   const transformMutation = api.tokens.transformToken.useMutation();
   const saveMutation = api.tokens.saveToken.useMutation();
+  const setTransformId = useTransformsStore((state) => state.setTransformId)
   const saveMutationHandler = (response: TransformTokenResponse) => {
     const token = response.tokens[0];
     if (token) {
-      saveMutation.mutate({
+      saveMutation.mutateAsync({
         id: response.id,
         token: {
           namespace: token.namespace,
@@ -27,7 +29,11 @@ function ExportToken({ tokens, showTokens = false }: { tokens: Imports[], showTo
             formats: platform.formats,
           }))
         }
-      })
+      }).then(response => {
+        setTransformId(response?.transformId || '')
+      }).catch((error) => {
+        console.error(error);
+      });
     }
   }
 

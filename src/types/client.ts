@@ -26,6 +26,11 @@ export type ITokenTransformStore = {
   updateState: (state: TInputState) => void;
 };
 
+export type TTransformsStore = {
+  currentTransformId: string;
+  setTransformId: (transformId: string) => void;
+};
+
 export type TSelect<T> = {
   defaultValues: T[];
 };

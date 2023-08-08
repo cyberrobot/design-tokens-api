@@ -17,6 +17,7 @@ import {
 //   tokens: TokenOutput[];
 // };
 export type SaveTokenResponse = {
+  transformId?: string;
   success: boolean;
 };
 
@@ -47,3 +48,26 @@ export type Tokens = z.infer<typeof TokensSchema>;
 export type Token = z.infer<typeof TokenSchema>;
 
 export type Transform = ArrayElement<typeof transforms>;
+
+export type TImportTransform = {
+  id: string;
+  createdAt: Date;
+  platforms: TImportPlatform[];
+  importsId?: string | null;
+};
+
+export type TImportPlatform = {
+  id: string;
+  name: string;
+  transformsId: string;
+  formats: TImportFormat[];
+};
+
+export type TImportFormat = {
+  id: string;
+  name: string;
+  ext: string;
+  value: string;
+  url?: string | null;
+  platformsId: string;
+};
