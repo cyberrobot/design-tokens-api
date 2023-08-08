@@ -3,7 +3,6 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { type Imports } from '@prisma/client';
 import { prisma } from '~/server/db';
 import ExportToken from '~/components/TransformToken';
-import { useTokenTransformStore } from '~/stores/use-token-transform';
 import Link from 'next/link';
 import RemoveToken from '~/components/RemoveToken';
 import { useRouter } from 'next/router';
@@ -26,11 +25,6 @@ export const getServerSideProps: GetServerSideProps<{
 }
 
 export default function Token({ token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const query = useTokenTransformStore((state) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { updateState, ...input } = state;
-    return input;
-  });
   const router = useRouter();
   const onDeleteHandler = () => {
     router.push('/tokens').catch(err => console.log(err));

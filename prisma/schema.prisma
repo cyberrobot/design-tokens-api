@@ -24,7 +24,7 @@ model Transforms {
   id        String      @id @unique @default(cuid())
   createdAt DateTime    @default(now())
   platforms Platforms[]
-  import    Imports?    @relation(fields: [importsId], references: [id])
+  import    Imports?    @relation(fields: [importsId], references: [id], onDelete: Cascade)
   importsId String?
 
   @@index([importsId])
@@ -33,7 +33,7 @@ model Transforms {
 model Platforms {
   id           String     @id @unique @default(cuid())
   name         String
-  transform    Transforms @relation(fields: [transformsId], references: [id])
+  transform    Transforms @relation(fields: [transformsId], references: [id], onDelete: Cascade)
   transformsId String
   formats      Formats[]
 
@@ -46,7 +46,7 @@ model Formats {
   value       String    @db.Text
   ext         String
   url         String?
-  platform    Platforms @relation(fields: [platformsId], references: [id])
+  platform    Platforms @relation(fields: [platformsId], references: [id], onDelete: Cascade)
   platformsId String
 
   @@index([platformsId])

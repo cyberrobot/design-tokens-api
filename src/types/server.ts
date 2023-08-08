@@ -71,3 +71,7 @@ export type TImportFormat = {
   url?: string | null;
   platformsId: string;
 };
+
+export type TTransformRemoveResponse = {
+  success: boolean;
+};
