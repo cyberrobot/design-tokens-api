@@ -1,7 +1,10 @@
 import prisma from "client";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { type TImportTransform } from "~/types/server";
+import {
+  type TTransformRemoveResponse,
+  type TImportTransform,
+} from "~/types/server";
 
 export const getTransforms = createTRPCRouter({
   getTransforms: publicProcedure
@@ -32,5 +35,24 @@ export const getTransforms = createTRPCRouter({
         return rows;
       }
       return [];
+    }),
+  removeTransform: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input }): Promise<TTransformRemoveResponse> => {
+      try {
+        await prisma.transforms.delete({
+          where: {
+            id: input.id,
+          },
+        });
+
+        return { success: true };
+      } catch (e) {
+        return { success: false };
+      }
     }),
 });
