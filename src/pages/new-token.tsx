@@ -66,7 +66,7 @@ function NewToken() {
               </div>
             </div>
             <div className="flex justify-end gap-4">
-              <button className="btn btn-primary" onClick={() => importHandler()}>Save {mutation.isLoading && <span className="loading loading-dots loading-sm"></span>}</button>
+              <button className="btn btn-primary btn-outline" onClick={() => importHandler()}>Save {mutation.isLoading && <span className="loading loading-dots loading-sm"></span>}</button>
               <Link href="/tokens" className="btn btn-outline">Back</Link>
             </div>
           </div>
