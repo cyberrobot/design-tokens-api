@@ -57,7 +57,7 @@ export default function Token({ token }: InferGetServerSidePropsType<typeof getS
               </div>
             </div>
             <div className="bg-neutral rounded-md mb-6">
-              <h2 className='text-xl font-bold tracking-tight text-red-500 p-4 rounded-t-md border-b-[1px] border-red-500'>Danger - Remove token</h2>
+              <h2 className='text-xl font-bold tracking-tight text-error p-4 rounded-t-md border-b-[1px] border-error'>Danger - Remove token</h2>
               <RemoveToken id={token.id} onDelete={onDeleteHandler} />
             </div>
           </div>

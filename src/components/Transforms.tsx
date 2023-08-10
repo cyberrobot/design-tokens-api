@@ -20,18 +20,19 @@ export default function Transforms({ importId }: { importId: string }) {
     }
   }, [query, query.data, transformId])
 
-
   return (
-    <div>{query.data?.map((transform, tI) => {
-      return <div key={`transform-${tI}`}>
-        <div className="text-gray-400 mb-2">Id: {transform.id}</div>
-        <div className="text-gray-400 mb-2">Created: {transform.createdAt.toLocaleDateString()} - {transform.createdAt.toLocaleTimeString()}</div>
-        <Transform transform={transform} />
-      </div>
-    })}
-      <div className="border-t-[1px] border-gray-500 mt-4 -ml-4 -mr-4 p-4 pb-0">
+    <div>
+      {!query.data?.length && <div className="text-gray-400">No transforms</div>}
+      {query.data?.map((transform, tI) => {
+        return <div key={`transform-${tI}`}>
+          <div className="text-gray-400 mb-2">Id: {transform.id}</div>
+          <div className="text-gray-400 mb-2">Created: {transform.createdAt.toLocaleDateString()} - {transform.createdAt.toLocaleTimeString()}</div>
+          <Transform transform={transform} />
+        </div>
+      })}
+      {query.data && query.data?.length > 0 && <div className="border-t-[1px] border-gray-500 mt-4 -ml-4 -mr-4 p-4 pb-0">
         <Link href={`/tokens/${importId}/transforms`} className="link link-hover">All transforms</Link>
-      </div>
+      </div>}
     </div>
   )
 }
