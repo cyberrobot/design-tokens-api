@@ -4,7 +4,7 @@ export default function TokenContent({ body }: { body: string }) {
   return (
     <Highlight theme={themes.vsDark} code={body} language='jsx'>
       {({ style, tokens, getLineProps, getTokenProps }) => (
-        <pre style={style} className="p-4 rounded-md">
+        <pre style={style} className="p-4 rounded-md overflow-auto">
           {tokens.map((line, i) => (
             <div key={i} {...getLineProps({ line })}>
               <span className="mr-4 select-none">{i + 1}</span>
