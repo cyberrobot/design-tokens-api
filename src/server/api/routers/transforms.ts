@@ -1,5 +1,5 @@
 import prisma from "client";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import {
   type TTransformRemoveResponse,
@@ -7,7 +7,7 @@ import {
 } from "~/types/server";
 
 export const getTransforms = createTRPCRouter({
-  getTransforms: publicProcedure
+  getTransforms: protectedProcedure
     .input(
       z.object({
         importId: z.string(),
@@ -36,7 +36,7 @@ export const getTransforms = createTRPCRouter({
       }
       return [];
     }),
-  removeTransform: publicProcedure
+  removeTransform: protectedProcedure
     .input(
       z.object({
         id: z.string(),

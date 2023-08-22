@@ -31,9 +31,32 @@ export const authRouter = createTRPCRouter({
         },
       });
 
-      return {
-        user,
-        message: "User created",
-      };
+      if (!user) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Unable to create user account",
+        });
+      }
+
+      const account = await ctx.prisma.account.create({
+        data: {
+          userId: user.id,
+          type: "credentials",
+          provider: "credentials",
+          providerAccountId: user.id,
+        },
+      });
+
+      if (user && account) {
+        return {
+          user,
+          message: "User created",
+        };
+      } else {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Unable to link account to created user profile",
+        });
+      }
     }),
 });

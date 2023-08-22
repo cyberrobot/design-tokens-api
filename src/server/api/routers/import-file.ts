@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { Octokit } from "octokit";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import { type Imports } from "@prisma/client";
 import { type ContentsRepoResponseData } from "~/types/client";
 
 export const importRouter = createTRPCRouter({
-  file: publicProcedure
+  file: protectedProcedure
     .input(
       z.object({
         file: z.string(),
@@ -15,7 +15,7 @@ export const importRouter = createTRPCRouter({
     .mutation(({ input }): string => {
       return input.file;
     }),
-  github: publicProcedure
+  github: protectedProcedure
     .input(
       z.object({
         path: z.string(),
@@ -42,7 +42,7 @@ export const importRouter = createTRPCRouter({
       }
       return null;
     }),
-  save: publicProcedure
+  save: protectedProcedure
     .input(
       z.object({
         name: z.string(),

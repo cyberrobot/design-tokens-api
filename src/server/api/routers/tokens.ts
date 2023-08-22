@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import _get from "lodash/get";
 import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { buildTokens } from "~/utils/build-file";
@@ -15,7 +15,7 @@ import {
 import { getRemoteUrlForFormat } from "~/utils/get-remote-url-for-format";
 
 export const getTokens = createTRPCRouter({
-  transformToken: publicProcedure
+  transformToken: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -60,14 +60,14 @@ export const getTokens = createTRPCRouter({
       // TODO: Add input validation for non-tRPC requests
       return null;
     }),
-  getTokens: publicProcedure.query(async () => {
+  getTokens: protectedProcedure.query(async () => {
     const rows = await prisma.imports.findMany();
     if (rows) {
       return rows;
     }
     return [];
   }),
-  saveToken: publicProcedure
+  saveToken: protectedProcedure
     .input(SaveTokenInputSchema)
     .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
       if (input.token) {
@@ -138,7 +138,7 @@ export const getTokens = createTRPCRouter({
       }
       return null;
     }),
-  removeToken: publicProcedure
+  removeToken: protectedProcedure
     .input(
       z.object({
         id: z.string(),
