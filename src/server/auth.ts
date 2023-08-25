@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { type GetServerSidePropsContext } from "next";
 import Credentials from "next-auth/providers/credentials";
 import {
   getServerSession,
@@ -37,9 +37,14 @@ declare module "next-auth" {
 const sessionCookieName = "next-auth.session-token";
 
 export function requestWrapper(
-  req: NextApiRequest,
-  res: NextApiResponse
-): [req: NextApiRequest, res: NextApiResponse, authOptions: NextAuthOptions] {
+  req: GetServerSidePropsContext["req"],
+  res: GetServerSidePropsContext["res"],
+  query: GetServerSidePropsContext["query"]
+): [
+  req: GetServerSidePropsContext["req"],
+  res: GetServerSidePropsContext["res"],
+  authOptions: NextAuthOptions
+] {
   const generateSessionToken = () => randomUUID();
   const fromDate = (time: number, date = Date.now()) =>
     new Date(date + time * 1000);
@@ -65,8 +70,8 @@ export function requestWrapper(
       }),
       async signIn({ user }) {
         if (
-          req.query.nextauth?.includes("callback") &&
-          req.query.nextauth?.includes("credentials") &&
+          query.nextauth?.includes("callback") &&
+          query.nextauth?.includes("credentials") &&
           req.method === "POST"
         ) {
           if (user) {
@@ -96,8 +101,8 @@ export function requestWrapper(
     jwt: {
       encode: async ({ token, secret, maxAge }) => {
         if (
-          req.query.nextauth?.includes("callback") &&
-          req.query.nextauth.includes("credentials") &&
+          query.nextauth?.includes("callback") &&
+          query.nextauth.includes("credentials") &&
           req.method === "POST"
         ) {
           const cookies = new Cookies(req, res);
@@ -110,8 +115,8 @@ export function requestWrapper(
       },
       decode: async ({ token, secret }) => {
         if (
-          req.query.nextauth?.includes("callback") &&
-          req.query.nextauth.includes("credentials") &&
+          query.nextauth?.includes("callback") &&
+          query.nextauth.includes("credentials") &&
           req.method === "POST"
         ) {
           return null;
@@ -172,9 +177,10 @@ export function requestWrapper(
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = (ctx: {
-  req: NextApiRequest;
-  res: NextApiResponse;
+  req: GetServerSidePropsContext["req"];
+  res: GetServerSidePropsContext["res"];
+  query: GetServerSidePropsContext["query"];
 }) => {
-  const wrappedRequest = requestWrapper(ctx.req, ctx.res);
+  const wrappedRequest = requestWrapper(ctx.req, ctx.res, ctx.query);
   return getServerSession(...wrappedRequest);
 };

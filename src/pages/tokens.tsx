@@ -3,6 +3,13 @@ import { useState } from 'react';
 import { api } from '~/utils/api';
 import { FaPlus } from 'react-icons/fa6';
 import Link from 'next/link';
+import { type GetServerSideProps } from 'next';
+import { withSession } from '~/server/withSession';
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps: GetServerSideProps = withSession(async () => {
+  return { props: {} }
+})
 
 function Tokens() {
   const [tokensToTransform, setTokensToTransform] = useState<Imports[]>([])
