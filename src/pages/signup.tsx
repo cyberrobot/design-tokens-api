@@ -7,8 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/auth";
 import { type TLogin } from "~/types/auth";
 import { api } from "~/utils/api";
+import { type NextPageWithLayout } from "./_app";
+import { type ReactElement } from "react";
 
-function SignUp() {
+const SignUp: NextPageWithLayout = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<TLogin>({
     resolver: zodResolver(loginSchema),
@@ -84,6 +86,17 @@ function SignUp() {
       </form>
     </>
   );
-}
+};
+
+SignUp.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <>
+      <nav className="container mx-auto py-4">
+        <Link href="/">Logo</Link>
+      </nav>
+      <main className="mt-4 min-h-screen">{page}</main>
+    </>
+  );
+};
 
 export default SignUp;

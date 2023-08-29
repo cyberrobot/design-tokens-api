@@ -6,9 +6,10 @@ import { signIn } from "next-auth/react";
 
 import { loginSchema } from "../schemas/auth";
 import { type TLogin } from "~/types/auth";
-import { useCallback } from "react";
+import { type ReactElement, useCallback } from "react";
+import { type NextPageWithLayout } from "./_app";
 
-function Login() {
+const Login: NextPageWithLayout = () => {
   const { register, handleSubmit } = useForm<TLogin>({
     resolver: zodResolver(loginSchema),
   });
@@ -67,6 +68,17 @@ function Login() {
       </form>
     </>
   );
-}
+};
+
+Login.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <>
+      <nav className="container mx-auto py-4">
+        <Link href="/">Logo</Link>
+      </nav>
+      <main className="mt-4 min-h-screen">{page}</main>
+    </>
+  );
+};
 
 export default Login;
