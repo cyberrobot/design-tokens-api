@@ -3,12 +3,11 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import { FaPlus } from "react-icons/fa6";
 import Link from "next/link";
-import { type GetServerSideProps } from "next";
 import { withSession } from "~/server/withSession";
 import Head from "next/head";
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export const getServerSideProps: GetServerSideProps = withSession(async () => {
+export const getServerSideProps = withSession(async () => {
   return { props: {} };
 });
 

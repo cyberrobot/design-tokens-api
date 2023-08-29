@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 
 import { loginSchema } from "../schemas/auth";
-import { type TLogin } from '~/types/auth';
-import { useCallback } from 'react';
+import { type TLogin } from "~/types/auth";
+import { useCallback } from "react";
 
 function Login() {
   const { register, handleSubmit } = useForm<TLogin>({
@@ -28,46 +28,45 @@ function Login() {
         <meta name="description" content="Login to account" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className="bg-base-200">
-        <form
-          className="flex items-center justify-center h-screen w-full"
-          onSubmit={handleSubmitWrapper}
-        >
-          <div className="card w-96 bg-neutral shadow-xl">
-            <div className="card-body">
-              <h1 className="text-2xl card-title mb-2 justify-center">Login</h1>
-              <label>Email
-                <input
-                  type="email"
-                  className="input input-bordered w-full max-w-xs mt-2"
-                  {...register("email")}
-                />
-              </label>
-              <label>Password
-                <input
-                  type="password"
-                  className="input input-bordered w-full max-w-xs mt-2"
-                  {...register("password")}
-                />
-              </label>
-              <div className="card-actions items-center justify-between mt-2 flex-col">
-                <button className="btn btn-primary w-full" type="submit">
-                  Login
-                </button>
-                <div>Don&apos;t have an account?
-                  <Link href="/signup" className="link ml-2">
-                    Sign up
-                  </Link>
-                </div>
+      <form
+        className="flex h-screen w-full items-center justify-center"
+        onSubmit={handleSubmitWrapper}
+      >
+        <div className="card w-96 bg-neutral shadow-xl">
+          <div className="card-body">
+            <h1 className="card-title mb-2 justify-center text-2xl">Login</h1>
+            <label>
+              Email
+              <input
+                type="email"
+                className="input-bordered input mt-2 w-full max-w-xs"
+                {...register("email")}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                type="password"
+                className="input-bordered input mt-2 w-full max-w-xs"
+                {...register("password")}
+              />
+            </label>
+            <div className="card-actions mt-2 flex-col items-center justify-between">
+              <button className="btn-primary btn w-full" type="submit">
+                Login
+              </button>
+              <div>
+                Don&apos;t have an account?
+                <Link href="/signup" className="link ml-2">
+                  Sign up
+                </Link>
               </div>
             </div>
           </div>
-        </form>
-      </main>
+        </div>
+      </form>
     </>
   );
 }
 
-export default Login
-  ;
+export default Login;

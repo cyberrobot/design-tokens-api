@@ -1,4 +1,4 @@
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { type Imports } from "@prisma/client";
 import { prisma } from "~/server/db";
@@ -6,10 +6,11 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import Transform from "~/components/Transform";
 import { useState } from "react";
+import { withSession } from "~/server/withSession";
 
-export const getServerSideProps: GetServerSideProps<{
+export const getServerSideProps = withSession<{
   token: Imports;
-}> = async ({ params }) => {
+}>(async ({ params }) => {
   const token = await prisma.imports.findFirst({
     where: {
       id: params?.id as string,
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<{
       token: JSON.parse(JSON.stringify(token)) as Imports,
     },
   };
-};
+});
 
 export default function Transforms({
   token,

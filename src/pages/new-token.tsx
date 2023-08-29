@@ -4,8 +4,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import TokenContent from "~/components/TokenContent";
 import TokenImportSource from "~/components/TokenImportSource";
+import { withSession } from "~/server/withSession";
 import { useTokenImportStore } from "~/stores/use-token-import";
 import { api } from "~/utils/api";
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = withSession(async () => {
+  return { props: {} };
+});
 
 function NewToken() {
   const { updateToken, ...token } = useTokenImportStore((state) => state);

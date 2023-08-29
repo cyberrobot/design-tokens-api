@@ -1,5 +1,5 @@
 import Head from "next/head";
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import type { InferGetServerSidePropsType } from "next";
 import { type Imports } from "@prisma/client";
 import { prisma } from "~/server/db";
 import ExportToken from "~/components/TransformToken";
@@ -8,10 +8,11 @@ import RemoveToken from "~/components/RemoveToken";
 import { useRouter } from "next/router";
 import Transforms from "~/components/Transforms";
 import TokenContent from "~/components/TokenContent";
+import { withSession } from "~/server/withSession";
 
-export const getServerSideProps: GetServerSideProps<{
+export const getServerSideProps = withSession<{
   token: Imports;
-}> = async ({ params }) => {
+}>(async ({ params }) => {
   const token = await prisma.imports.findFirst({
     where: {
       id: params?.id as string,
@@ -23,7 +24,7 @@ export const getServerSideProps: GetServerSideProps<{
       token: JSON.parse(JSON.stringify(token)) as Imports,
     },
   };
-};
+});
 
 export default function Token({
   token,
