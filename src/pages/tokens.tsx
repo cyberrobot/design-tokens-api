@@ -35,30 +35,17 @@ function Tokens() {
         <title>Tokens</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="container mx-auto flex flex-col rounded-md bg-neutral p-8 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="join items-center gap-3">
-            <h2 className="font-regular text-5xl tracking-tight  sm:text-[2rem]">
-              Tokens
-            </h2>
-            <Link
-              className="btn-outline btn-xs btn-circle btn"
-              href="/new-token"
-            >
-              <FaPlus />
-            </Link>
-          </div>
-          {/* {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
-              ...transformModal,
-              tokens: tokensToTransform,
-              isOpen: true
-            })}>Export</button>} */}
-        </div>
-        <div className="overflow-x-auto">
+      <div className="container mx-auto flex flex-col">
+        <header className="join mb-6 items-center gap-3">
+          <h1 className="text-4xl tracking-tight">Tokens</h1>
+          <Link className="btn-outline btn-xs btn-circle btn" href="/new-token">
+            <FaPlus />
+          </Link>
+        </header>
+        <div className="overflow-x-auto rounded-md bg-neutral p-8">
           <table className="table">
             <thead>
               <tr>
-                <th></th>
                 <th>Name</th>
                 <th>Created</th>
                 <th>Content</th>
@@ -67,13 +54,6 @@ function Tokens() {
             <tbody>
               {query.data?.map((token) => (
                 <tr key={token.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      className="checkbox-primary checkbox"
-                      onChange={(e) => handleTokenSelect(e, token)}
-                    />
-                  </td>
                   <td>{token.name}</td>
                   <td>
                     {token.createdAt.toLocaleDateString()} -{" "}

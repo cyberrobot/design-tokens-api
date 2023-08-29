@@ -52,14 +52,12 @@ export default function Transforms({
       </Head>
       <div className="container mx-auto flex flex-col">
         <header className="mb-6 flex items-center justify-between">
-          <h1 className="text-5xl font-bold tracking-tight">
-            Transforms: {token.name}
-          </h1>
+          <h1 className="text-4xl tracking-tight">Transforms: {token.name}</h1>
           <Link href={`/tokens/${token.id}`} className="btn-outline btn">
             Back
           </Link>
         </header>
-        <div className="mt-4 flex w-full flex-col">
+        <div className="flex w-full flex-col">
           {transforms.data?.map((transform) => {
             return (
               <div className="mb-6 w-full" key={`transform-${transform.id}`}>

@@ -40,14 +40,14 @@ export default function Token({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container mx-auto flex flex-col">
-        <header className="mb-6 flex items-center justify-between">
-          <h1 className="text-5xl font-bold tracking-tight">{token.name}</h1>
+        <header className="mb-2 flex items-center justify-between">
+          <h1 className="text-4xl tracking-tight">{token.name}</h1>
           <Link href="/tokens" className="btn-outline btn">
             Back
           </Link>
         </header>
         <div className="text-xl">{token.description}</div>
-        <div className="mt-4 flex w-full flex-col gap-6 xl:flex-row">
+        <div className="mt-6 flex w-full flex-col gap-6 xl:flex-row">
           <div className="w-full xl:w-[50%]">
             <div className="mb-6 rounded-md bg-neutral">
               <h2 className="rounded-t-md border-b-[1px] border-accent p-4 text-xl font-bold tracking-tight text-accent">

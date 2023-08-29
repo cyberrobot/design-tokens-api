@@ -48,7 +48,7 @@ function NewToken() {
       </Head>
       <div className="container mx-auto flex flex-col">
         <div className="mb-6 self-start">
-          <h1 className="text-5xl font-bold tracking-tight">New token</h1>
+          <h1 className="text-4xl tracking-tight">New token</h1>
         </div>
         <div className="flex w-full gap-6">
           <div className="config md:w-full lg:w-[50%]">
