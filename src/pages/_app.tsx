@@ -5,6 +5,7 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import AuthenticatedLayout from "~/components/AuthenticatedLayout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -12,7 +13,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <AuthenticatedLayout>
+        <Component {...pageProps} />
+      </AuthenticatedLayout>
     </SessionProvider>
   );
 };

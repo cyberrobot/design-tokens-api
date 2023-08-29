@@ -1,71 +1,101 @@
-import { type Imports } from '@prisma/client';
-import { useState } from 'react';
-import { api } from '~/utils/api';
-import { FaPlus } from 'react-icons/fa6';
-import Link from 'next/link';
-import { type GetServerSideProps } from 'next';
-import { withSession } from '~/server/withSession';
+import { type Imports } from "@prisma/client";
+import { useState } from "react";
+import { api } from "~/utils/api";
+import { FaPlus } from "react-icons/fa6";
+import Link from "next/link";
+import { type GetServerSideProps } from "next";
+import { withSession } from "~/server/withSession";
+import Head from "next/head";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps: GetServerSideProps = withSession(async () => {
-  return { props: {} }
-})
+  return { props: {} };
+});
 
 function Tokens() {
-  const [tokensToTransform, setTokensToTransform] = useState<Imports[]>([])
+  const [tokensToTransform, setTokensToTransform] = useState<Imports[]>([]);
   const query = api.tokens.getTokens.useQuery(undefined, {
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
-  const handleTokenSelect = (e: React.ChangeEvent<HTMLInputElement>, token: Imports) => {
-    setTokensToTransform(e.target.checked ? [...tokensToTransform, token] : tokensToTransform.filter(tokenToTransform => token.id !== tokenToTransform.id))
-  }
-  // const hasTokensToTransform = tokensToTransform.length > 0
+  const handleTokenSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    token: Imports
+  ) => {
+    setTokensToTransform(
+      e.target.checked
+        ? [...tokensToTransform, token]
+        : tokensToTransform.filter(
+            (tokenToTransform) => token.id !== tokenToTransform.id
+          )
+    );
+  };
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center">
-        <div className="container flex flex-col gap-8 p-8 bg-neutral rounded-md mt-8 shadow-sm">
-          <div className="flex justify-between items-center">
-            <div className="join gap-3 items-center">
-              <h2 className="text-5xl font-regular tracking-tight  sm:text-[2rem]">
-                Tokens
-              </h2>
-              <Link className="btn btn-xs btn-outline btn-circle" href="/new-token"><FaPlus /></Link>
-            </div>
-            {/* {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
+      <Head>
+        <title>Tokens</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="container mx-auto flex flex-col rounded-md bg-neutral p-8 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="join items-center gap-3">
+            <h2 className="font-regular text-5xl tracking-tight  sm:text-[2rem]">
+              Tokens
+            </h2>
+            <Link
+              className="btn-outline btn-xs btn-circle btn"
+              href="/new-token"
+            >
+              <FaPlus />
+            </Link>
+          </div>
+          {/* {hasTokensToTransform && <button className="btn btn-sm btn-outline" onClick={() => setTransformModal({
               ...transformModal,
               tokens: tokensToTransform,
               isOpen: true
             })}>Export</button>} */}
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Created</th>
-                  <th>Content</th>
-                </tr>
-              </thead>
-              <tbody>
-                {query.data?.map((token) => (
-                  <tr key={token.id}>
-                    <td><input type="checkbox" className="checkbox checkbox-primary" onChange={(e) => handleTokenSelect(e, token)} /></td>
-                    <td>{token.name}</td>
-                    <td>{token.createdAt.toLocaleDateString()} - {token.createdAt.toLocaleTimeString()}</td>
-                    <td>
-                      <Link href={`/tokens/${token.id}`} className="text-primary underline">View</Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
-      </main>
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Content</th>
+              </tr>
+            </thead>
+            <tbody>
+              {query.data?.map((token) => (
+                <tr key={token.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      className="checkbox-primary checkbox"
+                      onChange={(e) => handleTokenSelect(e, token)}
+                    />
+                  </td>
+                  <td>{token.name}</td>
+                  <td>
+                    {token.createdAt.toLocaleDateString()} -{" "}
+                    {token.createdAt.toLocaleTimeString()}
+                  </td>
+                  <td>
+                    <Link
+                      href={`/tokens/${token.id}`}
+                      className="text-primary underline"
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
-  )
+  );
 }
 
-export default Tokens
+export default Tokens;
