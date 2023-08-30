@@ -9,6 +9,7 @@ import { type TLogin } from "~/types/auth";
 import { api } from "~/utils/api";
 import { type NextPageWithLayout } from "./_app";
 import { type ReactElement } from "react";
+import Logo from "~/components/Logo";
 
 const SignUp: NextPageWithLayout = () => {
   const router = useRouter();
@@ -91,10 +92,12 @@ const SignUp: NextPageWithLayout = () => {
 SignUp.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      <nav className="container mx-auto py-4">
-        <Link href="/">Logo</Link>
+      <nav className="container mx-auto py-6">
+        <Link href="/">
+          <Logo />
+        </Link>
       </nav>
-      <main className="mt-4 min-h-screen">{page}</main>
+      <main className="-mt-[88px]">{page}</main>
     </>
   );
 };

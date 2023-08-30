@@ -8,6 +8,7 @@ import { loginSchema } from "../schemas/auth";
 import { type TLogin } from "~/types/auth";
 import { type ReactElement, useCallback } from "react";
 import { type NextPageWithLayout } from "./_app";
+import Logo from "~/components/Logo";
 
 const Login: NextPageWithLayout = () => {
   const { register, handleSubmit } = useForm<TLogin>({
@@ -73,10 +74,12 @@ const Login: NextPageWithLayout = () => {
 Login.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      <nav className="container mx-auto py-4">
-        <Link href="/">Logo</Link>
+      <nav className="container mx-auto py-6">
+        <Link href="/">
+          <Logo />
+        </Link>
       </nav>
-      <main className="mt-4 min-h-screen">{page}</main>
+      <main className="-mt-[88px]">{page}</main>
     </>
   );
 };

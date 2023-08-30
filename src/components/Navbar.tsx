@@ -3,6 +3,7 @@ import Dropdown from "./Dropdown";
 import { signOut, useSession } from "next-auth/react";
 
 import { type Session } from "next-auth";
+import Logo from "./Logo";
 
 function AccountDropdownHeader({ user }: { user: Session["user"] }) {
   return (
@@ -28,8 +29,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="container mx-auto flex justify-between py-4">
-      <Link href="/">Logo</Link>
+    <nav className="container mx-auto flex justify-between py-6">
+      <Link href="/">
+        <Logo />
+      </Link>
       <div className="flex gap-1">
         <Link href="/tokens">
           <button className="btn-ghost btn-sm btn hover:btn-primary">
