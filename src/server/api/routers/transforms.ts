@@ -1,13 +1,16 @@
 import prisma from "client";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import {
   type TTransformRemoveResponse,
   type TImportTransform,
+  type SaveTokenResponse,
 } from "~/types/server";
+import { SaveTokenInputSchema } from "~/schemas/server";
+import { getRemoteUrlForFormat } from "~/utils/get-remote-url-for-format";
 
 export const getTransforms = createTRPCRouter({
-  getTransforms: publicProcedure
+  getTransforms: protectedProcedure
     .input(
       z.object({
         importId: z.string(),
@@ -36,7 +39,78 @@ export const getTransforms = createTRPCRouter({
       }
       return [];
     }),
-  removeTransform: publicProcedure
+  saveTransform: protectedProcedure
+    .input(SaveTokenInputSchema)
+    .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
+      if (input.token) {
+        try {
+          const token = input.token;
+          const transform = await prisma.transforms.create({
+            data: {},
+          });
+          await prisma.transforms
+            .update({
+              where: {
+                id: transform.id,
+              },
+              data: {
+                platforms: {
+                  create: await Promise.all(
+                    token.platforms.map(async (platform) => {
+                      return {
+                        name: platform.name,
+                        formats: {
+                          create: await Promise.all(
+                            platform.formats.map(async (format) => {
+                              const url = await getRemoteUrlForFormat({
+                                id: input.id,
+                                version: transform.id,
+                                format,
+                              });
+                              return {
+                                ...format,
+                                url,
+                              } as typeof format;
+                            })
+                          ),
+                        },
+                      };
+                    })
+                  ),
+                },
+              },
+            })
+            .then(async (transform) => {
+              await prisma.imports.update({
+                where: {
+                  id: input.id,
+                },
+                data: {
+                  transforms: {
+                    connect: {
+                      id: transform.id,
+                    },
+                  },
+                },
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+          return {
+            transformId: transform.id,
+            success: true,
+          };
+        } catch (error) {
+          console.error(error);
+          return {
+            success: false,
+          };
+        }
+      }
+      return null;
+    }),
+  removeTransform: protectedProcedure
     .input(
       z.object({
         id: z.string(),
