@@ -50,12 +50,13 @@ export const importRouter = createTRPCRouter({
         file: z.string(),
       })
     )
-    .mutation(async ({ input }): Promise<Imports> => {
+    .mutation(async ({ input, ctx }): Promise<Imports> => {
       const fileImport = await prisma.imports.create({
         data: {
           file: input.file,
           name: input.name,
           description: input.description,
+          userId: ctx.session?.user.id,
         },
       });
 

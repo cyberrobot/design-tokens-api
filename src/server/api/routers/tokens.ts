@@ -5,17 +5,13 @@ import { type DesignToken } from "style-dictionary/types/DesignToken";
 import { buildTokens } from "~/utils/build-file";
 import { getErrorOutput, getTokenOutput } from "~/utils/get-output";
 import { getDbRowById } from "~/utils/get-db-row-by-id";
-import { SaveTokenInputSchema, TokensSchema } from "~/schemas/server";
+import { TokensSchema } from "~/schemas/server";
 import { sdBuildFolder } from "~/constants";
 import { prisma } from "~/server/db";
-import {
-  type TransformTokenResponse,
-  type SaveTokenResponse,
-} from "~/types/server";
-import { getRemoteUrlForFormat } from "~/utils/get-remote-url-for-format";
+import { type TransformTokenResponse } from "~/types/server";
 
 export const getTokens = createTRPCRouter({
-  transformToken: protectedProcedure
+  transformImport: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -60,85 +56,19 @@ export const getTokens = createTRPCRouter({
       // TODO: Add input validation for non-tRPC requests
       return null;
     }),
-  getTokens: protectedProcedure.query(async () => {
-    const rows = await prisma.imports.findMany();
+  getImports: protectedProcedure.query(async ({ ctx }) => {
+    const rows = await prisma.imports.findMany({
+      where: {
+        userId: ctx.session?.user.id,
+      },
+    });
     if (rows) {
       return rows;
     }
     return [];
   }),
-  saveToken: protectedProcedure
-    .input(SaveTokenInputSchema)
-    .mutation(async ({ input }): Promise<SaveTokenResponse | null> => {
-      if (input.token) {
-        try {
-          const token = input.token;
-          const transform = await prisma.transforms.create({
-            data: {},
-          });
-          await prisma.transforms
-            .update({
-              where: {
-                id: transform.id,
-              },
-              data: {
-                platforms: {
-                  create: await Promise.all(
-                    token.platforms.map(async (platform) => {
-                      return {
-                        name: platform.name,
-                        formats: {
-                          create: await Promise.all(
-                            platform.formats.map(async (format) => {
-                              const url = await getRemoteUrlForFormat({
-                                id: input.id,
-                                version: transform.id,
-                                format,
-                              });
-                              return {
-                                ...format,
-                                url,
-                              } as typeof format;
-                            })
-                          ),
-                        },
-                      };
-                    })
-                  ),
-                },
-              },
-            })
-            .then(async (transform) => {
-              await prisma.imports.update({
-                where: {
-                  id: input.id,
-                },
-                data: {
-                  transforms: {
-                    connect: {
-                      id: transform.id,
-                    },
-                  },
-                },
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          return {
-            transformId: transform.id,
-            success: true,
-          };
-        } catch (error) {
-          console.error(error);
-          return {
-            success: false,
-          };
-        }
-      }
-      return null;
-    }),
-  removeToken: protectedProcedure
+
+  removeImport: protectedProcedure
     .input(
       z.object({
         id: z.string(),

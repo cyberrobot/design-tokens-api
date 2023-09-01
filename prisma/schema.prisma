@@ -50,6 +50,7 @@ model User {
   password      String
   accounts      Account[]
   sessions      Session[]
+  imports       Imports[]
 }
 
 model VerificationToken {
@@ -67,6 +68,10 @@ model Imports {
   name        String
   description String?
   transforms  Transforms[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+
+  @@index([userId])
 }
 
 model Transforms {

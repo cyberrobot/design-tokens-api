@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { loginSchema } from "../schemas/auth";
 import { type TLogin } from "~/types/auth";
@@ -14,10 +15,21 @@ const Login: NextPageWithLayout = () => {
   const { register, handleSubmit } = useForm<TLogin>({
     resolver: zodResolver(loginSchema),
   });
+  const router = useRouter();
 
-  const onSubmit = useCallback(async (data: TLogin) => {
-    await signIn("credentials", { ...data, callbackUrl: "/tokens" });
-  }, []);
+  const onSubmit = useCallback(
+    async (data: TLogin) => {
+      await signIn("credentials", { ...data, redirect: false }).then(
+        (result) => {
+          if (result?.error) {
+            return;
+          }
+          router.push("/tokens").catch(console.error);
+        }
+      );
+    },
+    [router]
+  );
 
   const handleSubmitWrapper = (e: React.FormEvent<HTMLFormElement>) => {
     void handleSubmit(onSubmit)(e);

@@ -1,5 +1,3 @@
-import { type Imports } from "@prisma/client";
-import { useState } from "react";
 import { api } from "~/utils/api";
 import { FaPlus } from "react-icons/fa6";
 import Link from "next/link";
@@ -12,22 +10,9 @@ export const getServerSideProps = withSession(async () => {
 });
 
 function Tokens() {
-  const [tokensToTransform, setTokensToTransform] = useState<Imports[]>([]);
-  const query = api.tokens.getTokens.useQuery(undefined, {
+  const query = api.tokens.getImports.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  const handleTokenSelect = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    token: Imports
-  ) => {
-    setTokensToTransform(
-      e.target.checked
-        ? [...tokensToTransform, token]
-        : tokensToTransform.filter(
-            (tokenToTransform) => token.id !== tokenToTransform.id
-          )
-    );
-  };
 
   return (
     <>
