@@ -1,21 +1,29 @@
 import type { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { type Imports } from "@prisma/client";
-import { prisma } from "~/server/db";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import Transform from "~/components/Transform";
 import { useState } from "react";
-import { withSession } from "~/server/withSession";
+import {
+  type GetServerSidePropsContextWithSession,
+  withSession,
+} from "~/server/withSession";
+import { getImportById } from "~/utils/get-import-by-id";
 
 export const getServerSideProps = withSession<{
   token: Imports;
-}>(async ({ params }) => {
-  const token = await prisma.imports.findFirst({
-    where: {
-      id: params?.id as string,
-    },
+}>(async ({ params, session }: GetServerSidePropsContextWithSession) => {
+  const token = await getImportById({
+    id: params?.id as string,
+    userId: session?.user.id,
   });
+
+  if (!token) {
+    return {
+      redirect: { destination: "/tokens", permanent: false },
+    };
+  }
 
   return {
     props: {
