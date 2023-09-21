@@ -28,9 +28,8 @@ declare module "next-auth" {
     };
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
+  // interface User extends DefaultUser {
+  //   emailVerified: Date | null;
   // }
 }
 
@@ -60,6 +59,9 @@ export function requestWrapper(
       newUser: "/sign-up",
       signIn: "/login",
     },
+    session: {
+      maxAge: 60 * 60 * 24, // 24 hours
+    },
     callbacks: {
       session: ({ session, user }) => ({
         ...session,
@@ -76,7 +78,7 @@ export function requestWrapper(
         ) {
           if (user) {
             const sessionToken = generateSessionToken();
-            const sessionMaxAge = 60 * 60 * 24 * 30; // 30 Days
+            const sessionMaxAge = 60 * 60 * 24; // 24 hours
             const sessionExpiry = fromDate(sessionMaxAge);
 
             if (adapter.createSession) {
@@ -162,6 +164,7 @@ export function requestWrapper(
           return {
             id: user.id,
             email: user.email,
+            emailVerified: user.emailVerified,
           };
         },
       }),

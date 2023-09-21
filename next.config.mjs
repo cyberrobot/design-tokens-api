@@ -27,6 +27,23 @@ const config = {
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || "",
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || "",
     AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME || "",
+    EMAIL_HOST: process.env.EMAIL_HOST || "",
+    EMAIL_FROM: process.env.EMAIL_FROM || "",
+    EMAIL_PORT: process.env.EMAIL_PORT || "",
+    EMAIL_SECURE: process.env.EMAIL_SECURE || "",
+    EMAIL_USER: process.env.EMAIL_USER || "",
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || "",
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      fs: false,
+      net: false,
+      dns: false,
+      child_process: false,
+      tls: false,
+    };
+
+    return config;
   },
 };
 
