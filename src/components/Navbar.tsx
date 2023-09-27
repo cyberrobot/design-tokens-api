@@ -4,6 +4,8 @@ import { signOut, useSession } from "next-auth/react";
 
 import { type Session } from "next-auth";
 import Logo from "./Logo";
+import { useRouter } from "next/router";
+import { type SyntheticEvent } from "react";
 
 function AccountDropdownHeader({ user }: { user: Session["user"] }) {
   return (
@@ -16,17 +18,37 @@ function AccountDropdownHeader({ user }: { user: Session["user"] }) {
 
 export default function Navbar() {
   const session = useSession();
+  const router = useRouter();
   const accountItems = [
+    {
+      label: "Settings",
+      value: "settings",
+      href: "/account/settings",
+    },
     {
       label: "Sign out",
       value: "signout",
+      onClick: (e: SyntheticEvent) => {
+        e.preventDefault();
+        signOut().catch(console.error);
+      },
     },
   ];
-  const handleAccountSelect = (items: typeof accountItems) => {
-    if (items[0] && items[0].value === "signout") {
-      signOut().catch(console.error);
+
+  const accountItemComponents = accountItems.map((item, index) => {
+    if (item.value === "signout") {
+      return (
+        <span key={`link-${index}`} onClick={item.onClick} className="w-full">
+          {item.label}
+        </span>
+      );
     }
-  };
+    return (
+      <Link key={`link-${index}`} href={item.href || "/"}>
+        {item.label}
+      </Link>
+    );
+  });
 
   return (
     <nav className="container mx-auto flex justify-between py-6">
@@ -39,12 +61,10 @@ export default function Navbar() {
             Tokens
           </button>
         </Link>
-        <Dropdown<(typeof accountItems)[0]>
+        <Dropdown<(typeof accountItemComponents)[0]>
           placeholder="ACCOUNT"
-          value={accountItems}
-          labelBy="label"
+          value={accountItemComponents}
           size="sm"
-          onSelect={handleAccountSelect}
           persistPlaceholder={true}
           header={
             session.data?.user && (

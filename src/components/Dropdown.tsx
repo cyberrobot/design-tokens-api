@@ -1,3 +1,4 @@
+import React from "react";
 import {
   type ReactNode,
   useCallback,
@@ -89,7 +90,7 @@ export default function Dropdown<T extends string | unknown>({
 
   const getItems = useCallback(
     () =>
-      value?.map((item) => {
+      value?.map((item, index) => {
         let match;
         if (selectedItems) {
           match = selectedItems.find((selectedItem) => selectedItem === item);
@@ -98,7 +99,7 @@ export default function Dropdown<T extends string | unknown>({
 
         return (
           <li
-            key={`format-option-${label}`}
+            key={`format-option-${index}`}
             className="flex max-w-[260px] flex-row flex-nowrap items-center whitespace-nowrap rounded-md"
           >
             {multiSelect && (
@@ -113,7 +114,14 @@ export default function Dropdown<T extends string | unknown>({
                 {label}
               </label>
             )}
-            {!multiSelect && (
+            {!multiSelect && React.isValidElement(item) ? (
+              <span
+                className="w-full"
+                onClick={() => menuRef.current?.removeAttribute("open")}
+              >
+                {item}
+              </span>
+            ) : (
               <span
                 onClick={() => singleSelectHandler(item)}
                 className="w-full"
@@ -139,7 +147,7 @@ export default function Dropdown<T extends string | unknown>({
       onSelect(selectedItems);
     }
     getItems();
-  }, [getItems, onSelect, selectedItems]);
+  }, [getItems, onSelect, selectedItems, value]);
 
   useEffect(() => {
     if (defaultValue) {

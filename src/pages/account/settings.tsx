@@ -1,34 +1,35 @@
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { signUpSchema } from "../schemas/auth";
+import Head from "next/head";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { signUpSchema } from "~/schemas/auth";
+import { withSession } from "~/server/withSession";
 import { type TSignUp } from "~/types/auth";
 import { api } from "~/utils/api";
-import { type NextPageWithLayout } from "./_app";
-import { type ReactElement } from "react";
-import Logo from "~/components/Logo";
 
-const SignUp: NextPageWithLayout = () => {
-  const router = useRouter();
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = withSession(async () => {
+  return { props: {} };
+});
+
+// Create a settings page. Add a form with username, email and password fields.
+// Add a button to update the user's settings.
+// Add an option to delete the user's account.
+// Add an option to change the user's password.
+
+export default function Settings() {
+  const user = api.user.get.useQuery();
+  const mutation = api.user.update.useMutation();
   const { register, handleSubmit } = useForm<TSignUp>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      username: user.data?.username as string,
+      email: user.data?.email,
+      password: user.data?.password,
+    },
   });
-
-  const mutation = api.auth.signup.useMutation();
-
   const onSubmit: SubmitHandler<TSignUp> = (data: TSignUp) => {
     try {
-      mutation
-        .mutateAsync(data)
-        .then((result) => {
-          if (result.code === 200) {
-            router.push("/login").catch(console.error);
-          }
-        })
-        .catch(console.error);
+      mutation.mutate(data);
     } catch (error) {
       console.error(error);
     }
@@ -37,15 +38,13 @@ const SignUp: NextPageWithLayout = () => {
   const handleSubmitWrapper = (e: React.FormEvent<HTMLFormElement>) => {
     void handleSubmit(onSubmit)(e);
   };
-
   return (
     <>
       <Head>
-        <title>Create an account</title>
-        <meta name="description" content="Create an account" />
+        <title>Settings</title>
+        <meta name="description" content="Update user settings" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <form
         className="flex h-screen w-full items-center justify-center"
         onSubmit={handleSubmitWrapper}
@@ -53,7 +52,7 @@ const SignUp: NextPageWithLayout = () => {
         <div className="card w-96 bg-neutral shadow-xl">
           <div className="card-body">
             <h1 className="card-title mb-2 justify-center text-2xl">
-              Create an account
+              User details
             </h1>
             <label>
               Username
@@ -81,33 +80,12 @@ const SignUp: NextPageWithLayout = () => {
             </label>
             <div className="card-actions mt-2 flex-col items-center justify-between">
               <button className="btn-primary btn w-full" type="submit">
-                Sign Up
+                Update
               </button>
-              <div>
-                Already have an account?
-                <Link href="/login" className="link ml-2">
-                  Sign in
-                </Link>
-              </div>
             </div>
           </div>
         </div>
       </form>
     </>
   );
-};
-
-SignUp.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <>
-      <nav className="container mx-auto py-6">
-        <Link href="/">
-          <Logo />
-        </Link>
-      </nav>
-      <main className="-mt-[88px]">{page}</main>
-    </>
-  );
-};
-
-export default SignUp;
+}
