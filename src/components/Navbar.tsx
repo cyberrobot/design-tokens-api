@@ -4,12 +4,11 @@ import { signOut, useSession } from "next-auth/react";
 
 import { type Session } from "next-auth";
 import Logo from "./Logo";
-import { useRouter } from "next/router";
 import { type SyntheticEvent } from "react";
 
 function AccountDropdownHeader({ user }: { user: Session["user"] }) {
   return (
-    <div className="mb-2 border-b-[1px] border-neutral px-4 pb-2 pt-1 text-gray-500">
+    <div className="border-b-[1px] border-neutral px-6 py-2 text-gray-500">
       Signed in as{" "}
       <span className="font-bold text-neutral-content">{user.email}</span>
     </div>
@@ -18,7 +17,6 @@ function AccountDropdownHeader({ user }: { user: Session["user"] }) {
 
 export default function Navbar() {
   const session = useSession();
-  const router = useRouter();
   const accountItems = [
     {
       label: "Settings",
@@ -34,21 +32,28 @@ export default function Navbar() {
       },
     },
   ];
-
-  const accountItemComponents = accountItems.map((item, index) => {
-    if (item.value === "signout") {
-      return (
-        <span key={`link-${index}`} onClick={item.onClick} className="w-full">
-          {item.label}
-        </span>
-      );
-    }
-    return (
-      <Link key={`link-${index}`} href={item.href || "/"}>
-        {item.label}
-      </Link>
-    );
-  });
+  const AccountItemComponents = () => (
+    <>
+      {accountItems.map((item, index) => {
+        if (item.value === "signout") {
+          return (
+            <span
+              key={`link-${index}`}
+              onClick={item.onClick}
+              className="w-full"
+            >
+              {item.label}
+            </span>
+          );
+        }
+        return (
+          <Link key={`link-${index}`} href={item.href || "/"}>
+            {item.label}
+          </Link>
+        );
+      })}
+    </>
+  );
 
   return (
     <nav className="container mx-auto flex justify-between py-6">
@@ -61,16 +66,17 @@ export default function Navbar() {
             Tokens
           </button>
         </Link>
-        <Dropdown<(typeof accountItemComponents)[0]>
+        <Dropdown<typeof AccountItemComponents>
           placeholder="ACCOUNT"
-          value={accountItemComponents}
+          header={
+            <AccountDropdownHeader
+              user={session.data?.user as Session["user"]}
+            />
+          }
+          items={<AccountItemComponents />}
           size="sm"
           persistPlaceholder={true}
-          header={
-            session.data?.user && (
-              <AccountDropdownHeader user={session.data?.user} />
-            )
-          }
+          closeOnSelect={true}
           direction="right"
           type="ghost"
           className="hover:btn-primary"

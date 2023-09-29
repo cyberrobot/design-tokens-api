@@ -1,7 +1,8 @@
 import { type FormEvent, useRef, useState } from "react";
-import Dropdown from "./Dropdown";
 import { transformGroups, formats } from "~/constants";
 import { usePlatformStore } from "~/stores/use-platform";
+import { MultiSelectDropdown } from "./MultiSelectDropdown";
+import { SingleSelectDropdown } from "./SingleSelectDropdown";
 
 export default function AddPlatform() {
   const [transformGroupInState, setTransformGroupInState] = useState([]);
@@ -49,33 +50,32 @@ export default function AddPlatform() {
           }
         }}
       />
-      <Dropdown<string>
+      <SingleSelectDropdown<string>
         className="min-w-[170px] border-base-200"
-        value={transformGroups}
+        items={transformGroups}
         placeholder="Transform group"
-        onSelect={(selectedItems) => {
+        onSelect={(selectedItem) => {
           if (transformGroupRef.current) {
-            transformGroupRef.current.value = selectedItems[0] || "";
+            transformGroupRef.current.value = selectedItem || "";
           }
         }}
-        defaultValue={transformGroupInState}
+        // defaultItem={transformGroupInState[0]}
       />
       <input
         ref={transformGroupRef}
         type="hidden"
         name="transform.transformGroup"
       />
-      <Dropdown<string>
+      <MultiSelectDropdown<string>
         className="min-w-[170px] border-base-200"
-        value={formats}
-        multiSelect
+        items={formats}
         placeholder="Formats"
         onSelect={(selectedItems) => {
           if (formatsRef.current) {
             formatsRef.current.value = selectedItems.join(", ");
           }
         }}
-        defaultValue={formatsInState}
+        // defaultItems={formatsInState}
       />
       <input ref={formatsRef} type="hidden" name="transform.formats" />
       <button type="submit" className="btn-outline btn">

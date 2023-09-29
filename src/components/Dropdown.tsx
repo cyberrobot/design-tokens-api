@@ -1,11 +1,5 @@
-import React from "react";
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Children } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import OutsideClickHandler from "react-outside-click-handler";
 
@@ -25,6 +19,19 @@ type TButtonStyleType =
   | "disabled";
 type TButtonSize = "xs" | "sm" | "md" | "lg";
 type TDropdownDirection = "left" | "right";
+export type DropdownProps<T> = {
+  items: React.JSX.Element;
+  labelBy?: keyof T;
+  multiSelect?: boolean;
+  placeholder?: string;
+  persistPlaceholder?: boolean;
+  defaultItems?: T[];
+  closeOnSelect?: boolean;
+  type?: TButtonStyleType;
+  size?: TButtonSize;
+  className?: string;
+  direction?: TDropdownDirection;
+};
 
 const resolveClassNameForDirection = (direction: TDropdownDirection) => {
   switch (direction) {
@@ -36,124 +43,40 @@ const resolveClassNameForDirection = (direction: TDropdownDirection) => {
 };
 
 export default function Dropdown<T extends string | unknown>({
-  value = [],
+  items,
   labelBy,
   multiSelect = false,
   placeholder = "Select",
   persistPlaceholder = false,
-  onSelect,
-  defaultValue,
+  defaultItems,
   closeOnSelect = true,
   type = "outline",
   size = "md",
   className = "",
-  header,
   direction = "left",
+  header,
 }: {
-  value: T[];
+  items: React.JSX.Element;
   labelBy?: keyof T;
   multiSelect?: boolean;
   placeholder?: string;
   persistPlaceholder?: boolean;
-  onSelect?: (selectedItems: T[]) => void;
-  defaultValue?: T[];
+  defaultItems?: T[];
   closeOnSelect?: boolean;
   type?: TButtonStyleType;
   size?: TButtonSize;
   className?: string;
-  header?: ReactNode;
   direction?: TDropdownDirection;
+  header?: React.ReactNode;
 }) {
-  const [selectedItems, setSelectedItems] = useState<T[]>(defaultValue || []);
+  const [selectedItems, setSelectedItems] = useState<T[]>(defaultItems || []);
   const menuRef = useRef<HTMLDetailsElement>(null);
 
-  const multiSelectHandler = useCallback(
-    (item: T, checked: boolean) => {
-      setSelectedItems(
-        checked
-          ? [...selectedItems, item]
-          : [...selectedItems.filter((filteredItem) => item !== filteredItem)]
-      );
-    },
-    [selectedItems]
-  );
-
-  const singleSelectHandler = useCallback(
-    (item: T) => {
-      setSelectedItems([item]);
-      if (closeOnSelect) {
-        menuRef.current?.removeAttribute("open");
-      }
-    },
-    [closeOnSelect]
-  );
-
-  const getItems = useCallback(
-    () =>
-      value?.map((item, index) => {
-        let match;
-        if (selectedItems) {
-          match = selectedItems.find((selectedItem) => selectedItem === item);
-        }
-        const label = (labelBy ? item[labelBy] : item) as string;
-
-        return (
-          <li
-            key={`format-option-${index}`}
-            className="flex max-w-[260px] flex-row flex-nowrap items-center whitespace-nowrap rounded-md"
-          >
-            {multiSelect && (
-              <label className="w-full p-2">
-                <input
-                  checked={!!match}
-                  onChange={(e) => multiSelectHandler(item, e.target.checked)}
-                  type="checkbox"
-                  name="transform[formats]"
-                  className="checkbox checkbox-xs mr-2 p-0"
-                />
-                {label}
-              </label>
-            )}
-            {!multiSelect && React.isValidElement(item) ? (
-              <span
-                className="w-full"
-                onClick={() => menuRef.current?.removeAttribute("open")}
-              >
-                {item}
-              </span>
-            ) : (
-              <span
-                onClick={() => singleSelectHandler(item)}
-                className="w-full"
-              >
-                {label}
-              </span>
-            )}
-          </li>
-        );
-      }),
-    [
-      value,
-      selectedItems,
-      labelBy,
-      multiSelect,
-      multiSelectHandler,
-      singleSelectHandler,
-    ]
-  );
-
   useEffect(() => {
-    if (onSelect) {
-      onSelect(selectedItems);
+    if (defaultItems) {
+      setSelectedItems(defaultItems);
     }
-    getItems();
-  }, [getItems, onSelect, selectedItems, value]);
-
-  useEffect(() => {
-    if (defaultValue) {
-      setSelectedItems(defaultValue);
-    }
-  }, [defaultValue]);
+  }, [defaultItems]);
 
   return (
     <OutsideClickHandler
@@ -169,16 +92,31 @@ export default function Dropdown<T extends string | unknown>({
           <span>
             {selectedItems.length && !multiSelect && !persistPlaceholder
               ? selectedItems
-                  .map((item) => (labelBy ? item[labelBy] : item) as string)
+                  .map((item) => (labelBy ? item[labelBy] : item))
                   .join(", ")
               : placeholder}
           </span>
           <FaChevronDown />
         </summary>
-        <ul className="dropdown-content menu z-[1] mt-1 flex max-h-[270px] flex-col flex-nowrap overflow-y-auto rounded-md bg-base-300 p-2 shadow">
-          {header && header}
-          {getItems()}
-        </ul>
+        <div className="dropdown-content  z-[1] mt-1  max-h-[270px] overflow-y-auto rounded-md bg-base-300 shadow">
+          <div className="text-sm">{header && header}</div>
+          <ul className="menu flex flex-col flex-nowrap p-2">
+            {items &&
+              Children.map(items, (item: React.ReactNode, index: number) => (
+                <li
+                  onClick={() => {
+                    if (closeOnSelect) {
+                      menuRef.current?.removeAttribute("open");
+                    }
+                  }}
+                  key={`dropdown-item-${index}`}
+                  className="w-full"
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
       </details>
     </OutsideClickHandler>
   );
