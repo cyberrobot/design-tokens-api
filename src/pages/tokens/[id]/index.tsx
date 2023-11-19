@@ -85,7 +85,7 @@ export default function Token({
               <h2 className="rounded-t-md border-b-[1px] border-accent p-4 text-xl font-bold tracking-tight text-accent">
                 Source
               </h2>
-              <div className="p-4">
+              <div className="p-4 lg:h-[calc(100vh-269px)] lg:overflow-auto">
                 <TokenContent body={token.file} />
               </div>
             </div>

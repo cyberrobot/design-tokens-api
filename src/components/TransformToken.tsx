@@ -45,6 +45,7 @@ function ExportToken({
         });
     }
   };
+  const hasPlatform = platforms.length > 0;
 
   useEffect(() => {
     updateState({
@@ -97,10 +98,14 @@ function ExportToken({
           the entire token will be transformed.
         </span>
       </div>
-      <div className="mb-8 rounded-md">
-        <ListPlatforms />
+      {hasPlatform && (
+        <div className="my-3">
+          <ListPlatforms />
+        </div>
+      )}
+      <div className="my-3">
+        <AddPlatform />
       </div>
-      <AddPlatform />
       <div className="modal-action">
         <button
           className="btn-primary btn-outline btn"

@@ -8,7 +8,8 @@ export type ContentsRepoResponseData =
 export type TTokenImport = {
   name: string;
   description: string;
-  content: string;
+  file: string;
+  gitHubPath: string;
 };
 
 export interface ITokenImportStore extends TTokenImport {

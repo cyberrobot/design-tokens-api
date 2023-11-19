@@ -10,6 +10,7 @@ import {
   type TokenPlatformFormatSchema,
   type TransformTokenResponseSchema,
   type SaveTokenInputSchema,
+  type ImportTokenSchema,
 } from "~/schemas/server";
 
 // export type TokenTransform = {
@@ -75,3 +76,5 @@ export type TImportFormat = {
 export type TTransformRemoveResponse = {
   success: boolean;
 };
+
+export type TImportToken = z.infer<typeof ImportTokenSchema>;

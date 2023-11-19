@@ -4,6 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import { type Imports } from "@prisma/client";
 import { type ContentsRepoResponseData } from "~/types/client";
+import { ImportTokenSchema } from "~/schemas/server";
 
 export const importRouter = createTRPCRouter({
   file: protectedProcedure
@@ -43,13 +44,7 @@ export const importRouter = createTRPCRouter({
       return null;
     }),
   save: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        description: z.string(),
-        file: z.string(),
-      })
-    )
+    .input(ImportTokenSchema)
     .mutation(async ({ input, ctx }): Promise<Imports> => {
       const fileImport = await prisma.imports.create({
         data: {

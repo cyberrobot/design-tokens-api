@@ -53,3 +53,9 @@ export const SaveTokenInputSchema = z.object({
   id: z.string(),
   token: TokenOutputSchema,
 });
+
+export const ImportTokenSchema = z.object({
+  name: z.string().nonempty("Name is required"),
+  description: z.string().optional(),
+  file: z.string().nonempty("Import file is required"),
+});
