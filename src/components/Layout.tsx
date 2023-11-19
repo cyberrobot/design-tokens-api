@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
       )}
-      <main className="mt-4 min-h-screen">{children}</main>
+      <main className="mt-4 min-h-[calc(100vh-104px)]">{children}</main>
     </div>
   );
 }

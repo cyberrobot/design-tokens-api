@@ -4,6 +4,7 @@ import { type ITokenImportStore } from "~/types/client";
 export const useTokenImportStore = create<ITokenImportStore>()((set) => ({
   name: "",
   description: "",
-  content: "",
+  file: "",
+  gitHubPath: "",
   updateToken: (token) => set({ ...token }),
 }));
